@@ -83,3 +83,11 @@ func (cliArgs *SearchArgs) Parse(args []string) error {
 	cliArgs.Names = extra
 	return nil
 }
+
+func (ctx *SearchArgs) ParseAndRun(args []string) error {
+	err := ctx.Parse(args)
+	if err != nil {
+		return err
+	}
+	return ctx.SearchAction()
+}

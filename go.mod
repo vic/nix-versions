@@ -11,6 +11,7 @@ require (
 	github.com/mattn/go-isatty v0.0.20
 	github.com/peterldowns/nix-search-cli v0.2.0
 	github.com/rodaine/table v1.3.0
+	golang.org/x/sync v0.12.0
 )
 
 require (

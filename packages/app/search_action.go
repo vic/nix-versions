@@ -10,14 +10,6 @@ import (
 	lib "github.com/vic/nix-versions/packages/versions"
 )
 
-func (ctx *SearchArgs) ParseAndRun(args []string) error {
-	err := ctx.Parse(args)
-	if err != nil {
-		return err
-	}
-	return ctx.SearchAction()
-}
-
 func (ctx *SearchArgs) SearchAction() error {
 	if len(ctx.Names) < 1 {
 		fmt.Println(AppHelp)
@@ -74,7 +66,7 @@ func (ctx *SearchArgs) SearchAction() error {
 		if anyFailed {
 			str = marshalling.VersionsTable(versions, ctx.Color)
 			fmt.Fprint(os.Stderr, str, "\n")
-			return fmt.Errorf("Assertion failure. Expected at most one version per package.\nBut got %v.\nTry using @latest or a more specific version constraint.", seen)
+			return fmt.Errorf("assertion failure: expected at most one version per package, but got %v - try using @latest or a more specific version constraint", seen)
 		}
 	}
 

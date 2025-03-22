@@ -123,6 +123,10 @@ func ReadPackagesFromFile(arg string) ([]string, error) {
 	return []string{arg}, nil
 }
 
+func IsSimpleName(str string) bool {
+	return !strings.ContainsAny(str, ":/#@ ")
+}
+
 func IsInstallable(str string) bool {
 	return strings.ContainsAny(str, ":/#") && !strings.HasPrefix(str, "bin/")
 }

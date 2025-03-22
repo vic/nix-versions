@@ -18,4 +18,6 @@ vendor
 nix-versions
 REVISION
 
-.nix-tools
+.nix-versions
+foo
+chale

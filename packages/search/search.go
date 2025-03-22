@@ -1,8 +1,12 @@
 package search
 
 import (
+	"context"
+	"fmt"
 	"slices"
 	"strings"
+
+	"golang.org/x/sync/errgroup"
 
 	"github.com/vic/nix-versions/packages/lazamar"
 	"github.com/vic/nix-versions/packages/marshalling"
@@ -10,6 +14,128 @@ import (
 	"github.com/vic/nix-versions/packages/nixsearch"
 	lib "github.com/vic/nix-versions/packages/versions"
 )
+
+type NixVersionsBackend struct {
+	NixHub         bool
+	LazamarChannel string
+}
+
+type PackageSearchResult struct {
+	FromSearch *PackageSearchSpec
+	Versions   *[]lib.Version
+	Selected   *lib.Version
+}
+
+type PackageSearchResults []*PackageSearchResult
+
+type PackageSearchSpecs []*PackageSearchSpec
+
+type PackageSearchSpec struct {
+	Spec               string
+	Name               string
+	ExplicitConstraint string
+	SortByVersion      bool
+	TakeLatest         bool
+	MadeFromSimpleName bool
+	NixVersionsBackend NixVersionsBackend
+}
+
+func NewPackageSearchSpec(spec string) (*PackageSearchSpec, error) {
+	s := PackageSearchSpec{
+		Spec: spec,
+		NixVersionsBackend: NixVersionsBackend{
+			NixHub:         false, // Default to Lazamar
+			LazamarChannel: "nixos-unstable",
+		},
+	}
+	if marshalling.IsSimpleName(spec) {
+		s.Name = spec
+		s.MadeFromSimpleName = true
+		return &s, nil
+	}
+	return nil, fmt.Errorf("invalid package name: %s", spec)
+}
+
+func (s *PackageSearchSpec) UseLazamarChannel(channel string) {
+	s.NixVersionsBackend.NixHub = false
+	s.NixVersionsBackend.LazamarChannel = channel
+}
+
+func (s *PackageSearchSpec) LatestUnlessExplicitConstraint() {
+	if s.ExplicitConstraint == "" {
+		s.SortByVersion = true
+		s.TakeLatest = true
+	}
+}
+
+func (s *PackageSearchSpec) Search() (*PackageSearchResult, error) {
+	var (
+		result   *PackageSearchResult
+		versions []lib.Version
+		err      error
+	)
+
+	if s.NixVersionsBackend.NixHub {
+		if versions, err = nixhub.Search(s.Name); err != nil {
+			return nil, err
+		}
+	} else {
+		if versions, err = lazamar.Search(s.Name, s.NixVersionsBackend.LazamarChannel); err != nil {
+			return nil, err
+		}
+	}
+
+	result = &PackageSearchResult{
+		FromSearch: s,
+		Versions:   &versions,
+	}
+
+	if s.SortByVersion {
+		lib.SortByVersion(versions)
+	}
+	if s.TakeLatest {
+		result.Selected = &versions[len(versions)-1]
+	}
+
+	return result, nil
+}
+
+func (ss PackageSearchSpecs) Search() (PackageSearchResults, error) {
+	group, _ := errgroup.WithContext(context.Background())
+	results := make([]*PackageSearchResult, len(ss))
+	for i, s := range ss {
+		i, s := i, s
+		group.Go(func() error {
+			result, err := s.Search()
+			if err != nil {
+				return err
+			}
+			results[i] = result
+			return nil
+		})
+	}
+	if err := group.Wait(); err != nil {
+		return nil, err
+	}
+	return results, nil
+}
+
+func (r PackageSearchResults) EnsureUniquePackageNames() error {
+	var seen = make(map[string]int)
+	var failed = false
+	for _, result := range r {
+		seen[result.Selected.Name]++
+		if seen[result.Selected.Name] > 1 {
+			failed = true
+		}
+	}
+	if failed {
+		return fmt.Errorf("expected at most one version per package, but got %v - try using @latest or a more specific version constraint", seen)
+	}
+	return nil
+}
+
+// ---- WILL REMOVE FROM HERE ----
 
 type Opts struct {
 	One            bool

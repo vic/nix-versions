@@ -48,15 +48,24 @@ func (cliArgs *AppArgs) ParseAndRun(args []string) error {
 		return err
 	}
 
-	if len(extra) > 0 && extra[1] == "help" {
+	var cmd string
+	if len(extra) > 0 {
+		cmd = extra[0]
+	}
+
+	if cmd == "help" {
 		cliArgs.OnHelp()
 		return nil
 	}
 
-	if len(extra) > 0 && (extra[1] == "list" || extra[1] == "search") {
+	if cmd == "new" || cmd == "init" {
+		return NewInitArgs().ParseAndRun(extra[1:])
+	}
+
+	if cmd == "list" || cmd == "search" {
 		return NewSearchArgs().ParseAndRun(extra[1:])
 	}
 
 	// Default action is search.
-	return NewSearchArgs().ParseAndRun(extra[1:])
+	return NewSearchArgs().ParseAndRun(extra)
 }
