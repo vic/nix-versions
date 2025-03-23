@@ -5,5 +5,4 @@ inputs.flake-parts.lib.mkFlake { inherit inputs; } {
     ./packages.nix
     ./treefmt.nix
   ];
-  flake.flakeModules.default = ./flakeModules;
 }
