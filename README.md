@@ -4,9 +4,9 @@ This tool can help you [find the nixpkgs revision](#examples) where a specific v
 
 It can use https://search.nixos.org (via the [nix-search-cli](https://github.com/peterldowns/nix-search-cli) elastic-search client) to search programs by program name. And https://nixhub.io API or https://lazamar.co.uk/nix-versions/ as backend for finding available versions. It also features filtering by [version constraints](https://github.com/Masterminds/semver?tab=readme-ov-file#hyphen-range-comparisons) letting you restrict to an specific release series when needed.
 
-When used in conjuction with `nix shell`, `nix-versions` 
+When used in conjuction with `nix shell`, `nix-versions`
 can also double as a plain-text [development shell](#creating-a-shell-where-latest-ruby-and-cargo-are-available)
-and [tools versions manager](#reading-packages-and-version-constraints-plain-text-files) 
+and [tools versions manager](#reading-packages-and-version-constraints-plain-text-files)
 with [direnv automatic environment](#using-direnv-to-automatically-load-an-environment).
 
 Read [usage](#usage) for a description of `nix-versions` command line options.
@@ -88,13 +88,13 @@ including all its support files.
 ###### Using direnv to automatically load an environment
 
 If you are already using [direnv](https://direnv.net/), just add the following to your `.envrc`:
+
 ```
 direnv_load nix shell $(nix-versions -1ir .nix-tools) -c direnv dump
 watch_file .nix-tools .node-version .ruby-version # or any files your versions depend upon.
 ```
 
 ![image](https://github.com/user-attachments/assets/c57e4d1b-f000-4d14-8937-7f40a4c32da7)
-
 
 # Usage
 
