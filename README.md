@@ -1,222 +1,204 @@
-# nix-versions - Search nix packages versions.
+# `nix-versions` - List Nix installable packages versions.
 
-This CLI utility helps you find the versions of nix packages that were available in a particular nixpkgs revision.
+This tool can help you [find the nixpkgs revision](#examples) where a specific version of a package was available.
 
-It uses the following backends for searching nixpkgs revisions:
-
-- [lazamar/nix-versions](https://lazamar.co.uk/nix-versions/)
-- [nixhub](https://nixhub.io)
-
-It can search for packages by attribute-path, or by fuzzy searching [search.nixos.org](https://search.nixos.org) by name/description or by the executable programs they provide.
-This is possible thanks to [nix-search-cli](https://github.com/peterldowns/nix-search-cli)'s ElasticSearch client.
-
-<details>
-<summary>
-
-### Installation
-
-</summary>
-
-Install with nix
-
-```shell
-> nix profile install github:vic/nix-versions
-> nix-versions --help
-```
-
-Or use directly from github
-
-```shell
-> nix run github:vic/nix-versions -- --help
-```
-
-</details>
-
-<details>
-<summary>
-
-##### Usage Examples
-
-</summary>
-
-```shell
-# Show known versions of emacs on Lazamar-index (including emacs-nox, emacs-gtk, etc)
-> nix-versions --lazamar emacs
+It can use https://search.nixos.org (via the [nix-search-cli](https://github.com/peterldowns/nix-search-cli) elastic-search client) to search programs by program name. And https://nixhub.io API or https://lazamar.co.uk/nix-versions/ as backend for finding available versions. It also features filtering by [version constraints](https://github.com/Masterminds/semver?tab=readme-ov-file#hyphen-range-comparisons) letting you restrict to an specific release series when needed.
 
 
-# don't include packages with other attribute names like, emacs-nox, emacs-gtk, etc.
-> nix-versions --lazamar --exact emacs
+`nix-versions` can also double as [development shell](#creating-a-shell-where-latest-ruby-and-cargo-are-available) and [plain-text tools version manager](#reading-packages-and-version-constraints-plain-text-files) when used in conjuction with `nix shell`.
 
+Read [usage](#usage) for a description of `nix-versions` command line options.
 
-# Latest versions of packages providing `pwd`.
-# --exact means that packages must provide an executable named exactly `pwd`.
-> nix-versions --exact bin/pwd@latest
+`nix-versions` is part of the nascent [niv](https://github.com/vic/niv) suite, but can be used independently.
 
+# Installation
 
-# Latest versions of packages providing some executable programs.
-#   packages providing `emacsclient`. (eg. emacs-nox, emacs-gtk, emacs)
-#   packages providing `pip`. (eg. python312Packages.pip, python313Packages.pip)
-> nix-versions --exact bin/pip@latest bin/emacsclient@'>27 <29 latest'
-Version  Attribute              Nixpkgs-Revision
-24.0     python313Packages.pip  2d068ae5c6516b2d04562de50a58c682540de9bf
-24.0     python312Packages.pip  2d068ae5c6516b2d04562de50a58c682540de9bf
-28.2     emacs-nox              09ec6a0881e1a36c29d67497693a67a16f4da573
-28.2     emacs-gtk              09ec6a0881e1a36c29d67497693a67a16f4da573
-28.2     emacs                  09ec6a0881e1a36c29d67497693a67a16f4da573
+The only runtime-requirement is to have [`nix`](https://nixos.org/download/#download-nix) with flakes feature installed on your operating system (any Linux, MacOS, Windows-WSL2). If you are new to Nix, we recommend using the [Determinate Nix Installer](https://determinate.systems/nix-installer/) since it enables the `nix-command flakes` features by default. 
 
-
-# Any package having an executable program that contains `rust` on its name
-> nix-versions --exact=false bin/rust@latest
-Version  Attribute                        Nixpkgs-Revision
-0.1.1    rustycli                         2d068ae5c6516b2d04562de50a58c682540de9bf
-0.5.0    rusty-man                        2d068ae5c6516b2d04562de50a58c682540de9bf
-0.5.7    rusty-psn-gui                    5d9b5431f967007b3952c057fc92af49a4c5f3b2
-0.5.7    rusty-psn                        5d9b5431f967007b3952c057fc92af49a4c5f3b2
-0.16.0   rustypaste                       2d068ae5c6516b2d04562de50a58c682540de9bf
-0.24.0   rustywind                        8f76cf16b17c51ae0cc8e55488069593f6dab645
-1.1.3    rustus                           8f76cf16b17c51ae0cc8e55488069593f6dab645
-1.7.3    rustup-toolchain-install-master  2d068ae5c6516b2d04562de50a58c682540de9bf
-1.27.1   rustup                           2d068ae5c6516b2d04562de50a58c682540de9bf
-2.4.1    rustscan                         b58e19b11fe72175fd7a9e014a4786a91e99da5f
-
-
-# Packages matching the `netscape` query on search.nixos.org
-> nix-versions '~netscape'@latest
-Version  Attribute         Nixpkgs-Revision
-0.1.3    netsurf.libnslog  0d534853a55b5d02a4ababa1d71921ce8f0aee4c
-0.1.6    netsurf.libnspsl  2d068ae5c6516b2d04562de50a58c682540de9bf
-0.2.2    netsurf.libnsfb   2d068ae5c6516b2d04562de50a58c682540de9bf
-0.4      netselect         6c5c5f5100281f8f4ff23f13edd17d645178c87c
-0.4.2    netsurf.libdom    0d534853a55b5d02a4ababa1d71921ce8f0aee4c
-0.6.2    netscanner        0d534853a55b5d02a4ababa1d71921ce8f0aee4c
-0.6.9    netsniff-ng       e05f8bda630a0836d777d84de14b3c16eb758514
-0.9.2    netsurf.libcss    0d534853a55b5d02a4ababa1d71921ce8f0aee4c
-1.0.0    netsurf.libnsgif  de0fe301211c267807afd11b12613f5511ff7433
-3.11     netsurf.browser   2d068ae5c6516b2d04562de50a58c682540de9bf
-
-
-# Return only the most recent version
-> nix-versions --limit 1 emacs
-
-
-# Only versions between 25 and 27. Output JSON
-# same as 'emacs@>= 25 <= 27'
-> nix-versions --constraint '>= 25 <= 27' --json emacs
-
-
-# Latest of 29 series.
-# same as 'emacs@latest~29'
-> nix-versions --constraint '~29' --limit 1 emacs
-
-
-# Do not include emacs-nox and emacs-gtk
-> nix-versions --exact emacs
-
-
-# Show versions of pip from nixhub.io in the order that nixhub returns them
-> nix-versions --nixhub --sort=false python312Packages.pip
-
-
-# Use release channel `nixpkgs/nixos-24.05` (using lazamar search)
-> nix-versions --channel nixos-24.05 python312Packages.pip
-
-
-# NixHub.io has rate-limits but will likely have indexed more recent versions.
-# https://www.jetify.com/docs/nixhub/#rate-limits
-> nix-versions --nixhub bun@latest
-1.2.5    bun        573c650e8a14b2faa0041645ab18aed7e60f0c9a
-
-
-# https://lazamar.co.uk/nix-versions/ has no rate-limit, we scrap the webpage.
-> nix-versions --lazamar bun@latest
-1.1.43   bun        21808d22b1cda1898b71cf1a1beb524a97add2c4
-```
-
-</details>
-
-<details>
-<summary>
-
-###### `nix-versions --help`
-
-</summary>
+Once Nix is on your system, you can install `nix-versions` using:
 
 ```
-nix-versions - show available nix packages versions
-
-USAGE:
-   nix-versions [options] PKG_ATTRIBUTE_NAME...
-
-PKG_ATTRIBUTE_NAME:
-   A package attribute name like `emacs` or `python312Packages.pip`.
-   Use https://search.nixos.org to find the attribute name for a package.
-
-   If you don't know the attribute name, you can search for packages
-   by query (prefixed by `~`) or by program name (prefixed by `bin/`).
-
-   For example `~ cursor editor` will search the index at search.nixos.org for
-   packages that match the query.
-
-   And using `bin/pip` will search for packages that provide that program.
-
-   Optionally you can add a version constraint to the package name like
-   `bin/emacs@^25.x` or `emacs@>= 25 <= 27` or `~ git porcelain @latest`.
-
-OPTIONS:
-   --help, -h  show help and exit
-   --version   show version and exit
-
-   FILTERING
-
-   --constraint         Only include results that match a versions constraint. eg: '~1.0'.
-                        See https://github.com/Masterminds/semver?tab=readme-ov-file#basic-comparisons
-
-                        Constraint can also be part of PKG_ATTRIBUTE_NAME if it contains an `@` symbol.
-                          'emacs@^25.x'        - Show all Emacs in the `25.x` series.
-                          'emacs@>= 25 <= 27'  - Show all Emacs in the `25.x`-`27.x` series.
-                          'emacs@latest'       - Only show the most recent emacs.
-                          'emacs@latest<25'    - Only show the latest emacs before the `25` series
-                          'emacs@latest~29'    - Only show the most recent emacs of the `29` series
-
-                        If the value after `@` is a readable file, it will be read as a version constraint.
-                        This is useful for reading the version from a file like `.node-version`, etc.
-                          'bin/node@.node-version'
-
-   --exact              Only include results whose attribute is exactly PKG_ATTRIBUTE_NAME (default: false)
-                        When searching for executable programs like `bin/foo`, `--exact=false` returns
-                        packages having any program that contains `foo` as part of its name.
-
-   --limit n            Limit to a number of results. 1 means only last and `-1` only first. (default: 0)
-   --reverse            New versions first (default: false)
-   --sort               Sorted by version instead of using backend ordering (default: true)
-
-   FORMAT
-
-   --text               Output text table of versions (default: true)
-   --json               Output JSON array of versions (default: false)
-   --installable        Output as list of nix flake installables (default: false)
-
-   NIX VERSIONS BACKEND
-
-   --channel value      Nixpkgs channel for lazamar backend. Enables lazamar when set. (default: "nixpkgs-unstable")
-   --lazamar            Use https://lazamar.co.uk/nix-versions as backend (default: false)
-   --nixhub             Use https://www.nixhub.io/ as backend (default: true)
-
-Made with <3 by vic [https://x.com/oeiuwq].
-See https://github.com/vic/nix-versions for examples and reporting issues.
+nix profile install github:vic/nix-versions
 ```
 
-</details>
+Or using Go (if you have it available)
 
-<details>
-<summary>
+```
+go install github.com/vic/nix-versions
+```
 
-###### Motivation
+# Examples
 
-</summary>
+###### Show the latest known version of emacs in the local nixpkgs registry.
 
-- `nixpkgs` is an outstanding repository of programs, some say it's the largest most up-to-date repository. However since nixpkgs is only a repo of receipes, it will likely only contain the most recent version of a package. That's why sites like lazamar's and nixhub help searching for historic revisions of nixpkgs that used to contain a particular program version.
+When a version constraint is not specified (no `@` symbol on package spec), you can query
+what version of a package is current in your local nixpkgs tree.
 
-- I'm trying to use this CLI app to help other utilities find previous versions of nixpkgs programs.
+![image](https://github.com/user-attachments/assets/0b479a15-7755-45b7-8c92-7ca827371126)
 
-</details>
+###### List available emacs versions that are part of the 29 release series.
+Green is latest, Cyan are those versions also matching the constraint.
+Use `--color=false` to turn off coloring visual aid.
+![image](https://github.com/user-attachments/assets/72a3bea8-4e66-4407-b7e5-8e29d9d71ccd)
+
+###### List all available emacs versions, even those not matching the version constraint.
+![image](https://github.com/user-attachments/assets/5d1fb7b5-0af1-4c95-b058-f71d1470da41)
+
+###### Show only one (the latest) version matching a constraint.
+The `--one` option also has a short version `-1` (the number one)
+![image](https://github.com/user-attachments/assets/52ab2515-6dba-404d-86f1-360796cc0e3d)
+
+###### Use Lazamar index to show what the latest emacs was in `nixos-23.05` and `nixos-24.05` releases of nixpkgs.
+By default package versions are searched using NixHub, but you can use Lazamar index and any
+of the channels to find versions at previous nixpkgs releases. If no channel is specified, Lazamar will be
+searched with the `nixpkgs-unstable` channel.
+
+![image](https://github.com/user-attachments/assets/29db968c-2ccc-45b5-bcb5-97f0c0d7fbce)
+
+###### Creating a shell where latest ruby and cargo are available.
+Using the `--installable` (short `-i`) output format, you can create a `nix shell` from a list of installables. 
+![image](https://github.com/user-attachments/assets/f1fccd9f-18a8-4470-9fa5-4cd8de16758f)
+
+###### Reading packages and version constraints plain text files.
+
+Version constraints can be read from files. eg. `ruby@.ruby-versions` will read the `.ruby-versions` file
+to actually obtain the constraint.
+
+The `--read` (short `-r`) option can be used to read package specs from a file.
+Here, `.nix-tools`, but name is not significant. Shell like comments are ignored from read files.
+
+You can use `nix-versions` to create a `nix shell` containing those programs.
+
+![image](https://github.com/user-attachments/assets/f0609287-ea24-4835-8391-2b685c655a64)
+
+###### Install a set of tools into a particular directory (profile)
+
+Using the same `.nix-tools` file from the last example, install those tools into the `my-tools` directory,
+including all its support files.
+
+![image](https://github.com/user-attachments/assets/ec40778a-bbed-485b-a16e-9ed9f0251032)
+
+
+# Usage
+
+```man
+SYNOPSIS
+
+    nix-versions [<options>] <package-spec>...
+    
+DESCRIPTION
+
+    List available Nix package versions.
+
+
+PACKAGE SPEC
+
+   A package spec looks like: `<package-name>@<version-constraint>`.
+   
+   For example, having `emacs@~29`, `emacs` is the package-name, 
+   and `~29` is a version constraint.  Using this spec, `nix-versions` will 
+   list available versions of emacs that match the 29 release series.
+
+
+   PACKAGE NAME
+
+   A package name can be one of:
+
+   * The attribute path of an installable in the nixpkgs tree.
+     These are normally guessable, but some packages like pip are nested inside a package-set.
+
+     `go`
+     `emacs`
+     `nodejs`
+     `python312Packages.pip`
+     `cargo`
+
+     Use https://search.nixos.org or `nix run nixpkgs#nix-search-cil` to 
+     find the package name for those not guessable at first try.
+
+   * A flake installable.
+
+     Any package provided by a flake. This will bypass version search but
+     will still try to validate the installable against any specified version
+     constraint.
+
+     `nixpkgs#cargo`
+     `nixpkgs/nixos-24.11#ruby`
+     `github:vic/gleam-nix/main#gleam`
+
+   * A program name.
+
+     `bin/rustc`  - Packages providing the `rustc` program.
+     `bin/*rust*` - Packages with any program containing `rust` on its name.
+
+   VERSION CONSTRAINT
+
+     See https://github.com/Masterminds/semver for more details on the
+     syntax of constraints.
+
+     If the value after `@` is the path to a file. That file will be read
+     and its content will be used as version constraint.
+     eg, for ruby you could use: `ruby@.ruby-version`
+
+   SEARCH BACKEND
+
+     When a spec has a version constraint (includes `@`) a backend will be
+     used to search for available versions. If no version constraint is
+     present, only the most-recent version known to the local nixpkgs
+     instance will be shown.
+     
+     Default backend is https://nixhub.io. The default backend for specs
+     that are not explicit about one can be changed using the 
+     `--nixhub` or `--lazamar` options.
+
+     An spec can specify a particular backend to use for it.
+     `nixhub:go@latest` or `lazamar:emacs@latest`.
+
+
+UNCOMPLICATED VERSION MANAGER AND DEVELOPMENT SHELL
+
+You can store package specs in a plain-text file and
+use the `--one --installable --read FILE` options to
+load it into a `nix shell`.
+
+Also, since version constraints can be read from plain
+text files, you can keep using your `.java-version`/`.node-versions`/etc
+files.
+
+See the README for more examples.
+
+
+OPTIONS
+
+    --help  -h          Print this help and exit.
+
+    --read  -r FILE     Package specs are read from FILE.
+
+  SEARCH BACKEND
+
+     --nixhub  -n       Set default to https://nixhub.io for version search.
+
+     --lazamar -l       Set default to https://lazamar.co.uk/nix-versions/.
+
+     --channel -c CHAN  Use CHAN as when searching with Lazamar.
+                        Default is `nixpkgs-unstable`.
+
+  OUTPUT FORMAT
+
+    --json  -j          Output a JSON array of resolved packages.
+
+    --text  -t          Output as a text table. [default]
+
+    --installable -i    Print as a list of Nix installables.
+
+    --flake  -f         Generate a flake. See also: `ntv init`
+
+  TEXT OUTPUT OPTIONS
+
+    --color -C   Use colors on text table to highlight selected versions.
+
+    --all  -a    Show all versions even those not matching a constraint
+
+    --one  -1    Show only the latest version matching a constraint.
+
+```
