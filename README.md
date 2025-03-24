@@ -4,7 +4,6 @@ This tool can help you [find the nixpkgs revision](#examples) where a specific v
 
 It can use https://search.nixos.org (via the [nix-search-cli](https://github.com/peterldowns/nix-search-cli) elastic-search client) to search programs by program name. And https://nixhub.io API or https://lazamar.co.uk/nix-versions/ as backend for finding available versions. It also features filtering by [version constraints](https://github.com/Masterminds/semver?tab=readme-ov-file#hyphen-range-comparisons) letting you restrict to an specific release series when needed.
 
-
 `nix-versions` can also double as [development shell](#creating-a-shell-where-latest-ruby-and-cargo-are-available) and [plain-text tools version manager](#reading-packages-and-version-constraints-plain-text-files) when used in conjuction with `nix shell`.
 
 Read [usage](#usage) for a description of `nix-versions` command line options.
@@ -13,7 +12,7 @@ Read [usage](#usage) for a description of `nix-versions` command line options.
 
 # Installation
 
-The only runtime-requirement is to have [`nix`](https://nixos.org/download/#download-nix) with flakes feature installed on your operating system (any Linux, MacOS, Windows-WSL2). If you are new to Nix, we recommend using the [Determinate Nix Installer](https://determinate.systems/nix-installer/) since it enables the `nix-command flakes` features by default. 
+The only runtime-requirement is to have [`nix`](https://nixos.org/download/#download-nix) with flakes feature installed on your operating system (any Linux, MacOS, Windows-WSL2). If you are new to Nix, we recommend using the [Determinate Nix Installer](https://determinate.systems/nix-installer/) since it enables the `nix-command flakes` features by default.
 
 Once Nix is on your system, you can install `nix-versions` using:
 
@@ -37,18 +36,22 @@ what version of a package is current in your local nixpkgs tree.
 ![image](https://github.com/user-attachments/assets/0b479a15-7755-45b7-8c92-7ca827371126)
 
 ###### List available emacs versions that are part of the 29 release series.
+
 Green is latest, Cyan are those versions also matching the constraint.
 Use `--color=false` to turn off coloring visual aid.
 ![image](https://github.com/user-attachments/assets/72a3bea8-4e66-4407-b7e5-8e29d9d71ccd)
 
 ###### List all available emacs versions, even those not matching the version constraint.
+
 ![image](https://github.com/user-attachments/assets/5d1fb7b5-0af1-4c95-b058-f71d1470da41)
 
 ###### Show only one (the latest) version matching a constraint.
+
 The `--one` option also has a short version `-1` (the number one)
 ![image](https://github.com/user-attachments/assets/52ab2515-6dba-404d-86f1-360796cc0e3d)
 
 ###### Use Lazamar index to show what the latest emacs was in `nixos-23.05` and `nixos-24.05` releases of nixpkgs.
+
 By default package versions are searched using NixHub, but you can use Lazamar index and any
 of the channels to find versions at previous nixpkgs releases. If no channel is specified, Lazamar will be
 searched with the `nixpkgs-unstable` channel.
@@ -56,7 +59,8 @@ searched with the `nixpkgs-unstable` channel.
 ![image](https://github.com/user-attachments/assets/29db968c-2ccc-45b5-bcb5-97f0c0d7fbce)
 
 ###### Creating a shell where latest ruby and cargo are available.
-Using the `--installable` (short `-i`) output format, you can create a `nix shell` from a list of installables. 
+
+Using the `--installable` (short `-i`) output format, you can create a `nix shell` from a list of installables.
 ![image](https://github.com/user-attachments/assets/f1fccd9f-18a8-4470-9fa5-4cd8de16758f)
 
 ###### Reading packages and version constraints plain text files.
@@ -77,7 +81,6 @@ Using the same `.nix-tools` file from the last example, install those tools into
 including all its support files.
 
 ![image](https://github.com/user-attachments/assets/ec40778a-bbed-485b-a16e-9ed9f0251032)
-
 
 # Usage
 
