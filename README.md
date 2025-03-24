@@ -2,7 +2,7 @@
 
 This tool can help you [find the nixpkgs revision](#examples) where a specific version of a package was available.
 
-It can use https://search.nixos.org (via the [nix-search-cli](https://github.com/peterldowns/nix-search-cli) elastic-search client) to search programs by program name. And https://nixhub.io API or https://lazamar.co.uk/nix-versions/ as backend for finding available versions. It also features filtering by [version constraints](https://github.com/Masterminds/semver?tab=readme-ov-file#hyphen-range-comparisons) letting you restrict to an specific release series when needed.
+It can use https://search.nixos.org (via the [nix-search-cli](https://github.com/peterldowns/nix-search-cli) elastic-search client) to search packages by program name. And https://nixhub.io API or https://lazamar.co.uk/nix-versions/ as backend for finding available versions. It also features filtering by [version constraints](https://github.com/Masterminds/semver?tab=readme-ov-file#hyphen-range-comparisons) letting you restrict to an specific release series when needed.
 
 When used in conjuction with `nix shell`, `nix-versions`
 can also double as a plain-text [development shell](#creating-a-shell-where-latest-ruby-and-cargo-are-available)
@@ -11,7 +11,7 @@ with [direnv automatic environment](#using-direnv-to-automatically-load-an-envir
 
 Read [usage](#usage) for a description of `nix-versions` command line options.
 
-`nix-versions` is part of the nascent [niv](https://github.com/vic/niv) suite, but can be used independently.
+`nix-versions` is part of the nascent [ntv](https://github.com/vic/ntv) suite, but can be used independently.
 
 # Installation
 
