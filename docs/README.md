@@ -14,19 +14,23 @@ actions:
 features:
   - title: Works for everyone, at any level.
     details: |
-      As a friendly CLI to explore available versions.<br/>
-      As a tools version manager and development shell.<br/>
+      <br/>
+      As a friendly CLI to explore available versions.<br/><br/>
+      As a tools version manager and development shell.<br/><br/>
       As a flake generator for pinned-version packages.
   - title: Combine latest and dependable, stable versions.
     details: |
+      <br/>
       Keep your compilers and tooling at <em>known, stable releases</em> that work with your current code.<br/><br/>
       And use the most recent version for other nixpkgs.
   - title: Plays well with existing tools.
     details: |
+      <br/>
       Friendly with <code>nix shell</code>, <code>direnv</code> and advanced nix environments like <code>devenv</code> and <code>devshell</code>.<br/><br/>
       Usable as an <code>input</code> for any Flake and with <code>fetchurl</code> for non-flakes.
-  - title: Powered by nix but requires <small>no-nix-wizardy&trade;</small>
+  - title: Powered by nix but requires <small>no-wizardy&trade;</small>
     details: |
+      <br/>
       All the advantages of Nix without much effort.
       Reproducibility, security checksums, sandboxed builds, caching,
       remote building.
