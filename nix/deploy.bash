@@ -7,11 +7,11 @@ if [ -z "${CI:-}" ]; then
   exit 1
 fi
 
+ssh-add <(echo "$WEB_ADMIN_DEPLOY_KEY") 2>&1>/dev/null
 cd docs
 npm ci
 npm run build
 cd -
-ssh-add <(echo "$WEB_ADMIN_DEPLOY_KEY") 2>&1>/dev/null
 rsync -avPz -e ssh --delete docs/.vitepress/dist/* "$WEB_ADMIN_HOST":"~/www"
 scp "$WEB/bin/web" "$WEB_ADMIN_HOST":"~/new"
 ssh "$WEB_ADMIN_HOST" -C "mv ~/new ~/web"
