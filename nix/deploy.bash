@@ -8,6 +8,7 @@ if [ -z "${CI:-}" ]; then
 fi
 
 cd docs
+npm ci
 npm run build
 cd -
 ssh-add <(echo "$WEB_ADMIN_DEPLOY_KEY") 2>&1>/dev/null
