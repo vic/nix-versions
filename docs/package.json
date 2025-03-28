@@ -7,7 +7,6 @@
     "preview": "vitepress preview"
   },
   "devDependencies": {
-    "esbuild": ">=0.25.0",
     "vitepress": "^0.1.1"
   }
 }
