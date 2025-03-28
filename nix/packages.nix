@@ -18,7 +18,7 @@
       docs = pkgs.buildNpmPackage {
         name = "nix-versions-site";
         src = ./../docs;
-        npmDepsHash = "sha256-W6mhLnEEXf3MOCyIRluM3871HtgP0DYFsBeFxGQnwJs=";
+        npmDepsHash = "sha256-TcZvKDhVYdhBb7pL9LfkDVJqm5m/p0Jk0l1/OS24guo=";
         buildPhase = ''
           rm -rf .vitepress/dist
           mkdir -p .vitepress/dist
