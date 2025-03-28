@@ -4,5 +4,6 @@ inputs.flake-parts.lib.mkFlake { inherit inputs; } {
   imports = [
     ./packages.nix
     ./treefmt.nix
+    ./devshell.nix
   ];
 }
