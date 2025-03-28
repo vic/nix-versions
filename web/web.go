@@ -66,7 +66,7 @@ func HandleFlakeNix(w http.ResponseWriter, r *http.Request) {
 	}
 	path := strings.TrimPrefix(r.URL.Path, "/flake.nix/")
 	parts := strings.Split(path, "/")
-	fmt.Println("GenFlake: ", parts)
+	fmt.Println("GenFlakeNix: ", parts)
 
 	flake, err := createFlake(parts)
 	if err != nil {
@@ -88,7 +88,7 @@ func HandleFlakeZip(w http.ResponseWriter, r *http.Request) {
 	}
 	path := strings.TrimPrefix(r.URL.Path, "/flake.zip/")
 	parts := strings.Split(path, "/")
-	fmt.Println("GenFlake: ", parts)
+	fmt.Println("GenFlakeZip: ", parts)
 
 	flake, err := createFlake(parts)
 	if err != nil {

@@ -6,7 +6,6 @@ name: nix-versions
 text: Install nix packages at any version.
 tagline: |
 
-```
        <a href="/guide/installing"><strong>Ready for you.</strong>
        <small><code>nix run github:vic/nix-versions</code></small></a>
 
@@ -21,6 +20,5 @@ tagline: |
        
        <strong>Useful on advanced nix environments.</strong>
        <small>Integrates well with <code>devenv</code>, <code>devshell</code>, <code>NixOS</code>, you name it.</small>
-```
 
 ## actions: - theme: brand text: Get Started link: /example - theme: alt text: View on GitHub link: https://github.com/vic/nix-versions
