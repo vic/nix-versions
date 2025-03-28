@@ -8,6 +8,7 @@
     "push": "npm run build && rsync -avPzh -e ssh --delete .vitepress/dist/* $VITEPRESS"
   },
   "devDependencies": {
-    "vitepress": "^1.6.3"
+    "esbuild": ">=0.25.0",
+    "vitepress": "^0.1.1"
   }
 }
