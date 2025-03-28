@@ -2,10 +2,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vitepress dev .",
+    "dev": "vitepress dev",
     "build": "vitepress build",
-    "preview": "vitepress preview .",
-    "push": "npm run build && rsync -avPzh -e ssh --delete .vitepress/dist/* $VITEPRESS"
+    "preview": "vitepress preview"
   },
   "devDependencies": {
     "esbuild": ">=0.25.0",
