@@ -13,4 +13,4 @@ jobs:
         env:
           WEB_ADMIN_DEPLOY_KEY: ${{secrets.WEB_ADMIN_DEPLOY_KEY}}
           WEB_ADMIN_HOST: ${{secrets.WEB_ADMIN_HOST}}
-        run: nix develop -c deploy-docs
+        run: nix run .#deploy-docs

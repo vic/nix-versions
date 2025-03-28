@@ -5,69 +5,33 @@
 
   perSystem =
     { pkgs, self', ... }:
-    let
-
-      deploy-docs = pkgs.writeShellApplication {
-        name = "deploy-docs";
-        meta.description = "Deploy docs";
-        runtimeInputs = with pkgs; [
-          nodejs
-          rsync
-          openssh
-        ];
-        #runtimeEnv.DOCS = self'.packages.nix-versions-docs;
-        text = ''
-          ${pkgs.openssh}/bin/ssh-agent ${pkgs.bash}/bin/bash ${./docs.bash}
-        '';
-      };
-
-      deploy-web = pkgs.writeShellApplication {
-        name = "deploy-web";
-        meta.description = "Deploy web";
-        runtimeInputs = with pkgs; [
-          curl
-          openssh
-        ];
-        runtimeEnv.WEB = self'.packages.nix-versions-web;
-        text = ''
-          ${pkgs.openssh}/bin/ssh-agent ${pkgs.bash}/bin/bash ${./web.bash}
-        '';
-      };
-
-      develop-docs = pkgs.writeShellApplication {
-        name = "develop-docs";
-        meta.description = "Develop docs";
-        runtimeInputs = with pkgs; [
-          nodejs
-        ];
-        text = ''
-          (cd docs && npm run dev)
-        '';
-      };
-
-    in
     {
       devshells.default =
         { ... }:
         {
           imports = [ "${inputs.devshell}/extra/git/hooks.nix" ];
 
+          git.hooks.enable = true;
           git.hooks.pre-commit.text = "nix flake check";
 
           commands = [
-            { package = develop-docs; }
+            {
+              name = "develop-docs";
+              help = "Local docs devserver";
+              command = "cd docs; npm run dev";
+            }
           ];
 
           env = [
             {
+              # Otherwise the sass compiler fails on nixos.
+              # See patches/sass-embedded-1.62.0.patch
               name = "SASS_EMBEDDED_BIN_PATH";
               value = "${pkgs.dart-sass}/bin/sass";
             }
           ];
 
           packages = [
-            deploy-docs
-            deploy-web
             pkgs.gopls
             pkgs.go
             pkgs.nodejs

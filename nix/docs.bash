@@ -14,6 +14,7 @@ echo "StrictHostKeyChecking no" >> "$HOME"/.ssh/config
 DOCS="$PWD/docs/.vuepress/dist"
 rm -rf "$DOCS"
 cd docs
+npm ci
 npm run build
 
 ssh-add <(echo "$WEB_ADMIN_DEPLOY_KEY") 2>&1>/dev/null

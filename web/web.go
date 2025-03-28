@@ -16,7 +16,7 @@ import (
 )
 
 func Web() {
-	// http.HandleFunc("/default.nix/", HandleDefaultNix)
+	//http.HandleFunc("/default.nix/", HandleDefaultNix)
 	http.HandleFunc("/flake.nix/", HandleFlakeNix)
 	http.HandleFunc("/flake.zip/", HandleFlakeZip)
 	http.HandleFunc("/nixpkgs-sri/", HandleSri)

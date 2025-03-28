@@ -15,4 +15,4 @@ jobs:
           WEB_ADMIN_API_KEY: ${{secrets.WEB_ADMIN_API_KEY}}
           WEB_ADMIN_API_URL: ${{secrets.WEB_ADMIN_API_URL}}
           WEB_ADMIN_HOST: ${{secrets.WEB_ADMIN_HOST}}
-        run: nix develop -c deploy-web
+        run: nix run .#deploy-web

@@ -45,15 +45,46 @@
         };
       };
 
+      deploy-docs = pkgs.writeShellApplication {
+        name = "deploy-docs";
+        meta.description = "Deploy docs";
+        runtimeInputs = with pkgs; [
+          nodejs
+          rsync
+          openssh
+        ];
+        #runtimeEnv.DOCS = docs;
+        text = ''
+          ${pkgs.openssh}/bin/ssh-agent ${pkgs.bash}/bin/bash ${./docs.bash}
+        '';
+      };
+
+      deploy-web = pkgs.writeShellApplication {
+        name = "deploy-web";
+        meta.description = "Deploy web";
+        runtimeInputs = with pkgs; [
+          curl
+          openssh
+        ];
+        runtimeEnv.WEB = web;
+        text = ''
+          ${pkgs.openssh}/bin/ssh-agent ${pkgs.bash}/bin/bash ${./web.bash}
+        '';
+      };
+
     in
     {
 
       packages = {
         default = nix-versions;
-        inherit nix-versions;
-
         nix-versions-web = web;
         nix-versions-docs = docs;
+
+        inherit
+          nix-versions
+          deploy-docs
+          deploy-web
+          ;
       };
 
       checks = {
