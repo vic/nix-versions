@@ -14,9 +14,9 @@ actions:
 features:
   - title: Works for everyone, at any level.
     details: |
-      <ul><li>As a friendly CLI to explore available versions.</li>
-      <li>As a tools version manager and development shell.</li>
-      <li>As a flake generator for pinned-version packages.</li>
+      As a friendly CLI to explore available versions.<br/>
+      As a tools version manager and development shell.<br/>
+      As a flake generator for pinned-version packages.
   - title: Combine latest and dependable, stable versions.
     details: |
       Keep your compilers and tooling at <em>known, stable releases</em> that work with your current code.<br/><br/>
