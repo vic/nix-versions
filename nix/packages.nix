@@ -5,9 +5,9 @@
 
       nix-versions = pkgs.buildGoModule {
         pname = "nix-versions";
-        src = ./..;
+        src = ./../cli;
         version = "1.0.0";
-        vendorHash = builtins.readFile ./../vendor-hash;
+        vendorHash = builtins.readFile ./../cli/vendor-hash;
         meta = with pkgs.lib; {
           description = "Go CLI for searching nix packages versions using lazamar or nixhub";
           homepage = "https://nix-versions.alwaysdata.net";
@@ -53,6 +53,10 @@
 
         nix-versions-web = web;
         nix-versions-docs = docs;
+      };
+
+      checks = {
+        inherit web nix-versions;
       };
 
     };
