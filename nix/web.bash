@@ -8,11 +8,6 @@ if [ -z "${CI:-}" ]; then
 fi
 
 ssh-add <(echo "$WEB_ADMIN_DEPLOY_KEY") 2>&1>/dev/null
-cd docs
-npm ci
-npm run build
-cd -
-rsync -avPz -e ssh --delete docs/.vitepress/dist/* "$WEB_ADMIN_HOST":"~/www"
 scp "$WEB/bin/web" "$WEB_ADMIN_HOST":"~/new"
 ssh "$WEB_ADMIN_HOST" -C "mv ~/new ~/web"
 curl --basic --user "$WEB_ADMIN_API_KEY:" -X POST "$WEB_ADMIN_API_URL"
