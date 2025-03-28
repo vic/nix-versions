@@ -1,33 +1,66 @@
-______________________________________________________________________
-
-title: "Install nix packages at any version"
+---
+# https://vitepress.dev/reference/default-theme-home-page
 layout: home
+
 hero:
-name: nix-versions
-text: Install nix packages at any version.
-actions:
-
-- theme: brand
-  text: Get Started
-  link: /example
-
-- theme: alt
-  text: View on GitHub
-  link: https://github.com/vic/nix-versions
+  name: "<code>$ nix-versions</code>"
+  text: '<small>Install pkgs@any version.</small>'
   tagline: |
-  <a href="/guide/installing"><strong>Ready for you.</strong>
-  <small><code>nix run github:vic/nix-versions</code></small></a>
+    Any version of <code>&gt;200_000</code> nixpkgs at your disposal.
+  actions:
+    - theme: brand
+      text: Get Started
+      link: /guide/installing
+    - theme: alt
+      text: View on GitHub
+      link: https://github.com/vic/nix-versions
 
-  <a href="/guide/listing-versions"><strong>Ensure version compatibility of your tools.</strong>
-  <small>Powerful version constraints: <code>ruby@~3.2.x</code></small></a>
+features:
+  - title: Works for everyone, at any level.
+    details: |
+      <br/>
+      As a friendly CLI to explore available versions.<br/>
+      As a zero nix-knowledge tools version manager.<br/>
+      As a flake generator for pinned-version pkgs.
+  - title: Combine bleeding-edge and dependable, stable tools.
+    details: |
+      Use compilers and tooling in known, stable releases that work(tm) with your code.<br/>
+      And the most recent version for other nixpkgs.
+  - title: Integrates with flakes and nix modules.
+    details: |
+      <br />
+      Focuses on giving you access to packages versions and lets other
+      tools shine on their own.<br/>
+      Friendly with NixOS, devenv and devshell.
+  - title: No-brainer development environment.
+    details: |
+      Combine with <code>direnv</code> and <code>nix shell</code> and get a devshell
+      that can read your existing <code>.ruby-version</code>, <code>.node-version</code>, etc files.
+  - title: Secure and reproducible environments.
+    details: |
+      Powered by Nix. All packages and their dependencies get hashed.
+      Gone are the days of same versions but different bytes.
+  - title: Part of a bigger self.
+    details: |
+      nix-versions is part of the Ntv suite.
+      With a mission of providing tools that can attract more people to
+      the amazing Nix ecosystem.
+---
+<br/>
+<br/>
 
-  <a href="/guide/finding-packages"><strong>Any version of <code>>200000</code> nixpkgs at your disposal.</strong>
-  <small>Combines search.nixos.org with Lazamar/NixHub indexes.</small></a>
+# Try it now.
+<br/>
 
-  <strong>Plays nice with other tools to empower you.</strong>
-  <small>Mix with <code>nix shell</code> + <code>direnv</code> and get the easiest development environment with <strong>zero-nix knowledge</strong>.</small>
+###### As a command line utility
+```
+nix run github:vic/nix-versions -- 'emacs@~27 || ~29' --all
+```
 
-  <strong>Useful on advanced nix environments.</strong>
-  <small>Integrates well with <code>devenv</code>, <code>devshell</code>, <code>NixOS</code>, you name it.</small>
+###### As a flake generator webservice.
 
-______________________________________________________________________
+```
+nix develop 'https://nix-versions.alwaysdata.net/flake.zip/cowsay@latest/go@1.24.x' --output-lock-file /dev/null
+```
+
+same as `nix-versions --flake cowsay@latest > flake.nix'`, but the webservice can be use as input on your own flakes!.

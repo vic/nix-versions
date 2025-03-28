@@ -33,6 +33,17 @@
         '';
       };
 
+      develop-docs = pkgs.writeShellApplication {
+        name = "develop-docs";
+        meta.description = "Develop docs";
+        runtimeInputs = with pkgs; [
+          nodejs
+        ];
+        text = ''
+          (cd docs && npm run dev)
+        '';
+      };
+
     in
     {
       devshells.default =
@@ -43,11 +54,12 @@
           git.hooks.pre-commit.text = "nix flake check";
 
           commands = [
-            { package = deploy-docs; }
-            { package = deploy-web; }
+            { package = develop-docs; }
           ];
 
           packages = [
+            deploy-docs
+            deploy-web
             pkgs.gopls
             pkgs.go
             pkgs.nodejs

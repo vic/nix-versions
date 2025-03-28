@@ -7,6 +7,7 @@
     programs.nixfmt.excludes = [ ".direnv" ];
     programs.deadnix.enable = true;
     programs.mdformat.enable = true;
+    programs.mdformat.excludes = [ "docs/index.md" ];
     programs.yamlfmt.enable = true;
     programs.gofmt.enable = true;
   };
