@@ -1,8 +1,4 @@
-______________________________________________________________________
-
-## title: Installing the nix-versions command. outline: 1 layout: doc prev: false next: text: Listing package versions link: '/listing-versions'
-
-# All you need is Nix \<3
+# All you need is Nix
 
 Since you will be installing packages from the [nixpkgs repository](https://github.com/nixos/nixpkgs),
 the only requirement is to have the `nix` command on your system.

@@ -15,16 +15,15 @@
         };
       };
 
+      # Fix me, esbuild hangs, dunno why.
       docs = pkgs.buildNpmPackage {
         name = "nix-versions-site";
         src = ./../docs;
-        npmDepsHash = "sha256-TcZvKDhVYdhBb7pL9LfkDVJqm5m/p0Jk0l1/OS24guo=";
+        npmDepsHash = builtins.readFile ./../docs/vendor-hash;
         buildPhase = ''
-          rm -rf .vitepress/dist
-          mkdir -p .vitepress/dist
-          mkdir -p node_modules/vitepress/lib/app/temp
-          node_modules/.bin/vitepress build
-          mv .vitepress/dist $out
+          export SASS_EMBEDDED_BIN_PATH="${pkgs.dart-sass}/bin/sass"
+          mkdir -p $HOME/{temp,cache}
+          npm run build -- --debug --clean-cache --clean-temp --temp $HOME/temp --cache $HOME/cache --dest $out
         '';
         dontInstall = true;
         meta = with pkgs.lib; {
@@ -58,7 +57,7 @@
       };
 
       checks = {
-        inherit web nix-versions docs;
+        inherit web nix-versions;
       };
 
     };

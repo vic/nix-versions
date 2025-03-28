@@ -16,6 +16,7 @@ import (
 )
 
 func Web() {
+	// http.HandleFunc("/default.nix/", HandleDefaultNix)
 	http.HandleFunc("/flake.nix/", HandleFlakeNix)
 	http.HandleFunc("/flake.zip/", HandleFlakeZip)
 	http.HandleFunc("/nixpkgs-sri/", HandleSri)
@@ -29,27 +30,36 @@ func Web() {
 	http.ListenAndServe(addr, nil)
 }
 
-func createFlake(args []string) (string, error) {
+func createFlake(args []string) (*flake.Context, error) {
 	specs, err := search_spec.ParseSearchSpecs(args, nil)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	res, err := search.PackageSearchSpecs(specs).Search()
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	if err := res.EnsureOneSelected(); err != nil {
-		return "", err
+		return nil, err
 	}
 	if err := res.EnsureUniquePackageNames(); err != nil {
-		return "", err
+		return nil, err
 	}
 
 	f := flake.New()
 	for _, r := range res {
 		f.AddTool(r)
+	}
+
+	return f, nil
+}
+
+func renderFlake(args []string) (string, error) {
+	f, err := createFlake(args)
+	if err != nil {
+		return "", err
 	}
 
 	code, err := f.Render(false)
@@ -68,7 +78,7 @@ func HandleFlakeNix(w http.ResponseWriter, r *http.Request) {
 	parts := strings.Split(path, "/")
 	fmt.Println("Gen flake.nix: ", parts)
 
-	flake, err := createFlake(parts)
+	flake, err := renderFlake(parts)
 	if err != nil {
 		werr(err)
 		return
@@ -90,7 +100,7 @@ func HandleFlakeZip(w http.ResponseWriter, r *http.Request) {
 	parts := strings.Split(path, "/")
 	fmt.Println("Gen flake.zip: ", parts)
 
-	flake, err := createFlake(parts)
+	flake, err := renderFlake(parts)
 	if err != nil {
 		werr(err)
 		return

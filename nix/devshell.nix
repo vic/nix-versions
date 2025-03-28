@@ -11,10 +11,11 @@
         name = "deploy-docs";
         meta.description = "Deploy docs";
         runtimeInputs = with pkgs; [
+          nodejs
           rsync
           openssh
         ];
-        runtimeEnv.DOCS = self'.packages.nix-versions-docs;
+        #runtimeEnv.DOCS = self'.packages.nix-versions-docs;
         text = ''
           ${pkgs.openssh}/bin/ssh-agent ${pkgs.bash}/bin/bash ${./docs.bash}
         '';
@@ -55,6 +56,13 @@
 
           commands = [
             { package = develop-docs; }
+          ];
+
+          env = [
+            {
+              name = "SASS_EMBEDDED_BIN_PATH";
+              value = "${pkgs.dart-sass}/bin/sass";
+            }
           ];
 
           packages = [
