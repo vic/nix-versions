@@ -12,6 +12,6 @@ echo "StrictHostKeyChecking no" >> $HOME/.ssh/config
 ssh-add <(echo "$WEB_ADMIN_DEPLOY_KEY") 2>&1>/dev/null
 cd docs
 npm ci
-npm run build
-cd -
-rsync -avPz -e ssh --delete docs/.vitepress/dist/* "$WEB_ADMIN_HOST":"~/www"
+mkdir -p node_modules/vitepress/lib/app/temp
+npm run build -- --outDir $HOME/docs-built
+rsync -avPz -e ssh --delete $HOME/docs-built/* "$WEB_ADMIN_HOST":"~/www"
