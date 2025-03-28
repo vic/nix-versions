@@ -12,7 +12,7 @@
           imports = [ "${inputs.devshell}/extra/git/hooks.nix" ];
 
           git.hooks.enable = true;
-          git.hooks.pre-commit.text = "nix flake check";
+          git.hooks.pre-push.text = "nix flake check";
 
           commands = [
             {
