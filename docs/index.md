@@ -1,8 +1,6 @@
-______________________________________________________________________
-
-title: "Install nix pacakges at any version."
+---
+title: "Install nix packages at any version"
 layout: home
-
 hero:
 name: nix-versions
 text: Install nix packages at any version.
