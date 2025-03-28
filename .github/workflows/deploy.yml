@@ -1,7 +1,7 @@
 on:
   push:
     branches: [main]
-    paths: [ "web/**", "docs/**" ]
+    paths: ["web/**", "docs/**"]
 jobs:
   deploy:
     name: deploy
