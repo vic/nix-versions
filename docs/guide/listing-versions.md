@@ -11,7 +11,6 @@ nix-versions emacs@
 ```
 
 ::: details see command output
-![list-all-emacs](./list-all-emacs.png)
 :::
 
 In the previous example, `emacs@` is a package spec, and is equivalent to `emacs@*`, that is, emacs at any version (no-constraint).
@@ -24,7 +23,6 @@ nix-versions emacs
 ```
 
 ::: details see command output
-![list-current-emacs](./list-current-emacs.png)
 :::
 
 # Version Constraints.
@@ -44,7 +42,6 @@ nix-versions 'emacs@~27 || ~29'
 ```
 
 ::: details see command output
-![list-emacs-27-29](./list-emacs-27-29.png)
 :::
 
 ::: tip Tip: use `--all` (short: `-a`) to visualize the matching versions compared to all others.
@@ -55,7 +52,6 @@ nix-versions 'emacs@~27 || ~29' --all
 ```
 
 ::: details see command output
-![list-emacs-27-29-all](./list-emacs-27-29-all.png)
 :::
 
 As you can see, coloring can help visualising the selected versions matching an specified constraint and also
@@ -69,5 +65,4 @@ nix-versions 'emacs@~27 || ~29' --one
 ```
 
 ::: details see command output
-![list-emacs-27-29-one](./list-emacs-27-29-one.png)
 :::

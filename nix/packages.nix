@@ -15,16 +15,18 @@
         };
       };
 
-      # hm this is not building `vitepress build` hangs
       docs = pkgs.buildNpmPackage {
         name = "nix-versions-site";
         src = ./../docs;
-        npmDepsHash = "sha256-DiFgdB7XMCWpemqcifoVpEsMskZTFltB6fSh7frwjq0=";
+        npmDepsHash = "sha256-W6mhLnEEXf3MOCyIRluM3871HtgP0DYFsBeFxGQnwJs=";
         buildPhase = ''
-          ls -la
-          node_modules/.bin/vitepress build | tee build.log
+          rm -rf .vitepress/dist
+          mkdir -p .vitepress/dist
+          mkdir -p node_modules/vitepress/lib/app/temp
+          node_modules/.bin/vitepress build
           mv .vitepress/dist $out
         '';
+        dontInstall = true;
         meta = with pkgs.lib; {
           description = "Site for docs and flake generation services.";
           homepage = "https://nix-versions.alwaysdata.net";
@@ -56,7 +58,7 @@
       };
 
       checks = {
-        inherit web nix-versions;
+        inherit web nix-versions docs;
       };
 
     };

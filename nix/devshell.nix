@@ -11,10 +11,10 @@
         name = "deploy-docs";
         meta.description = "Deploy docs";
         runtimeInputs = with pkgs; [
-          nodejs
           rsync
           openssh
         ];
+        runtimeEnv.DOCS = self'.packages.nix-versions-docs;
         text = ''
           ${pkgs.openssh}/bin/ssh-agent ${pkgs.bash}/bin/bash ${./docs.bash}
         '';

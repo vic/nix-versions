@@ -32,7 +32,6 @@ nix run nixpkgs#nix-search-cli -- --name pip --max-results 3
 ```
 
 ::: details see command output
-![pip-by-name](./pip-by-name.png)
 :::
 
 See `nix-search-cli --help` for more advanced examples.
@@ -47,7 +46,6 @@ nix-versions bin/passwd@
 ```
 
 ::: details see command output
-![bin_passwd](./bin_passwd.png)
 :::
 
 ```shell
@@ -56,7 +54,6 @@ nix-versions 'bin/*rust*@'
 ```
 
 ::: details see command output
-![bin_rust](./bin_rust.png)
 :::
 
 For most cases we recommend using `nix-search-cli` for finding the correct attribute-path of some package you need. It even lets you filter by license and other metadata, see the examples on their readme.
@@ -70,7 +67,6 @@ nix-versions lazamar:nixos-21.05:emacs@ lazamar:nixos-23.05:emacs@ lazamar:nixpk
 ```
 
 ::: details see command output
-![bin_rust](./bin_rust.png)
 :::
 
 # Setting default versions backend
@@ -82,5 +78,4 @@ nix-versions lazamar:emacs@ nixhub:emacs@ --one
 ```
 
 ::: details see command output
-![bin_rust](./bin_rust.png)
 :::
