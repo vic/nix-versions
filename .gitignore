@@ -2,6 +2,8 @@
 .devenv*
 devenv.local.nix
 
+# Use this for your local environment.
+.envrc.private
 
 # direnv
 .direnv
