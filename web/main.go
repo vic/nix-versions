@@ -21,9 +21,10 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/default.nix/", HandleDefaultNix)
 	http.HandleFunc("/flake.nix/", HandleFlakeNix)
 	http.HandleFunc("/flake.zip/", HandleFlakeZip)
+	http.HandleFunc("/default.nix/", HandleDefaultNix)
+	http.HandleFunc("/default.zip/", HandleDefaultZip)
 	http.HandleFunc("/nixpkgs-sri/", HandleSri)
 	fs := http.FileServer(http.Dir("www/"))
 	http.Handle("/", http.StripPrefix("/", fs))
@@ -95,7 +96,7 @@ func prefetch(res search.PackageSearchResults) ([]Prefetch, error) {
 	for i, s := range res {
 		i, s := i, s
 		group.Go(func() error {
-			// url := "https://codeload.github.com/nixos/nixpkgs/tar.gz/refs/heads/" + s.Selected.Revision
+			// url := "https://codeload.github.com/nixos/nixpkgs/tar.gz/refs/" + s.Selected.Revision
 			url := "https://github.com/NixOS/nixpkgs/archive/" + s.Selected.Revision + ".tar.gz"
 			hash, err := Sri(url)
 			if err != nil {
@@ -122,6 +123,15 @@ func unpackArray[S ~[]E, E any](s S) []any {
 	}
 	return r
 }
+func writeIndent(buff *bytes.Buffer) func(int, string, ...string) {
+	return func(i int, s string, x ...string) {
+		if len(x) == 0 {
+			buff.WriteString((strings.Repeat("  ", i)) + s + "\n")
+		} else {
+			buff.WriteString((strings.Repeat("  ", i)) + fmt.Sprintf(s, unpackArray(x)...) + "\n")
+		}
+	}
+}
 
 func renderDefaultNix(args []string) (string, error) {
 	res, err := searchSpecs(args)
@@ -135,13 +145,7 @@ func renderDefaultNix(args []string) (string, error) {
 	}
 
 	buff := bytes.Buffer{}
-	w := func(i int, s string, x ...string) {
-		if len(x) == 0 {
-			buff.WriteString((strings.Repeat("  ", i)) + s + "\n")
-		} else {
-			buff.WriteString((strings.Repeat("  ", i)) + fmt.Sprintf(s, unpackArray(x)...) + "\n")
-		}
-	}
+	w := writeIndent(&buff)
 	w(0, "{ pkgs ? import <nixpkgs> {} }:")
 	w(0, "let")
 	for _, p := range fetched {
@@ -152,22 +156,21 @@ func renderDefaultNix(args []string) (string, error) {
 		w(1, "};")
 	}
 	outs := `
-      inherit (pkgs) lib fetchzip system config;
-      nixpkgs = lib.mapAttrs (name: tool: fetchzip { 
-        url = tool.url;
-        hash = tool.hash;
-      }) tools;
-      packages = lib.mapAttrs (name: tool:
-        let 
-          pkgs = import nixpkgs.${name} { inherit system; config = config.nixpkgs; };
-          path = lib.splitString "." tool.attrPath;
-          pkg = lib.getAttrFromPath path pkgs;
-        in pkg
-      ) tools;
-      pkgsEnv = pkgs.buildEnv { name = "tools"; paths = lib.attrValues packages; }; 
-	  devShell = pkgs.mkShell { buildInputs = [ pkgsEnv ]; };
+	nixpkgs = pkgs.lib.mapAttrs (name: tool: pkgs.fetchzip { 
+	  url = tool.url;
+	  hash = tool.hash;
+	}) tools;
+	packages = pkgs.lib.mapAttrs (name: tool:
+	  let 
+	    pkgs' = import nixpkgs.${name} { system = pkgs.system; config = pkgs.config.nixpkgs; };
+	    path = pkgs.lib.splitString "." tool.attrPath;
+	    pkg = pkgs.lib.getAttrFromPath path pkgs';
+	  in pkg
+	) tools;
+	pkgsEnv = pkgs.buildEnv { name = "tools"; paths = lib.attrValues packages; }; 
+	devShell = pkgs.mkShell { buildInputs = [ pkgsEnv ]; };
     `
-	w(0, outs)
+	w(0, strings.ReplaceAll(outs, "\t", "  "))
 	w(0, "in { inherit tools nixpkgs packages pkgsEnv devShell; }")
 
 	return buff.String(), nil
@@ -181,7 +184,7 @@ func HandleDefaultNix(w http.ResponseWriter, r *http.Request) {
 	parts := strings.Split(path, "/")
 	fmt.Println("Gen default.nix: ", parts)
 
-	default_nix, err := renderDefaultNix(parts)
+	nix, err := renderDefaultNix(parts)
 	if err != nil {
 		werr(err)
 		return
@@ -192,7 +195,7 @@ func HandleDefaultNix(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-cache")
 	w.Header().Set("Pragma", "no-cache")
 	w.Header().Set("Expires", "0")
-	fmt.Fprint(w, default_nix)
+	fmt.Fprint(w, nix)
 }
 
 func HandleFlakeNix(w http.ResponseWriter, r *http.Request) {
@@ -215,6 +218,35 @@ func HandleFlakeNix(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Pragma", "no-cache")
 	w.Header().Set("Expires", "0")
 	fmt.Fprint(w, flake)
+}
+
+func HandleDefaultZip(w http.ResponseWriter, r *http.Request) {
+	werr := func(err error) {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	path := strings.TrimPrefix(r.URL.Path, "/default.zip/")
+	parts := strings.Split(path, "/")
+	fmt.Println("Gen default.zip: ", parts)
+
+	nix, err := renderDefaultNix(parts)
+	if err != nil {
+		werr(err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/zip")
+	w.Header().Set("Content-Disposition", "attachment; filename=default.zip")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Pragma", "no-cache")
+	w.Header().Set("Expires", "0")
+
+	zw := zip.NewWriter(w)
+	defer zw.Close()
+	err = writeFileToZip(zw, "default.nix", []byte(nix))
+	if err != nil {
+		werr(err)
+		return
+	}
 }
 
 func HandleFlakeZip(w http.ResponseWriter, r *http.Request) {
@@ -271,8 +303,6 @@ func Sri(url string) (string, error) {
 		return "", err
 	}
 	defer resp.Body.Close()
-
-	fmt.Printf("Checking Nixpkgs: %s\n", url)
 	h := sha256.New()
 	_, err = io.Copy(h, resp.Body)
 	if err != nil {
@@ -281,7 +311,6 @@ func Sri(url string) (string, error) {
 	sum := h.Sum(nil)
 	base64Url := base64.URLEncoding.EncodeToString(sum)
 	sri := "sha256-" + strings.ReplaceAll(base64Url, "-", "+")
-	fmt.Printf("Nixpkgs: %s\nSRI: %s\n", url, sri)
 	return sri, nil
 }
 
@@ -291,8 +320,6 @@ func Sha256(url string) (string, error) {
 		return "", err
 	}
 	defer resp.Body.Close()
-
-	fmt.Printf("Checking Nixpkgs: %s\n", url)
 	h := sha256.New()
 	_, err = io.Copy(h, resp.Body)
 	if err != nil {
