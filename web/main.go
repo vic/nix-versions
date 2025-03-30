@@ -152,22 +152,39 @@ func renderDefaultNix(args []string) (string, error) {
 		w(1, "tools.\"%s\" = {", p.tool.Selected.Name)
 		w(2, "url = \"%s\";", p.Url)
 		w(2, "hash = \"%s\";", p.Hash)
+		w(2, "version = \"%s\";", p.tool.Selected.Version)
 		w(2, "attrPath = \"%s\";", p.tool.Selected.Attribute)
 		w(1, "};")
 	}
 	outs := `
-	nixpkgs = pkgs.lib.mapAttrs (name: tool: pkgs.fetchzip { 
-	  url = tool.url;
-	  hash = tool.hash;
-	}) tools;
+	nixpkgs = pkgs.lib.mapAttrs (name: tool:
+	  let 
+	    archive = pkgs.fetchurl { 
+		  name = "${name}-${tool.version}-nixpkgs.tar.gz";
+	      url = tool.url;
+	      hash = tool.hash;
+	    };
+		# since our sri was computed on the tarball, we need to unpack it
+		# we could use fetchzip, but we'd have to extract the tarball on 
+		# the server to compute recursive sri (which we wont do).
+		unpacked = pkgs.stdenvNoCC.mkDerivation {
+		  name = "${name}-${tool.version}-nixpkgs";
+		  phases = [ "unpackPhase" ];
+		  unpackPhase = ''
+		    unpackFile ${archive}
+			mv nixpkgs-* $out
+		  '';
+		};
+	  in unpacked
+	) tools;
 	packages = pkgs.lib.mapAttrs (name: tool:
 	  let 
-	    pkgs' = import nixpkgs.${name} { system = pkgs.system; config = pkgs.config.nixpkgs; };
+	    pkgs' = import nixpkgs.${name} { system = pkgs.system; config = pkgs.config.nixpkgs or {}; };
 	    path = pkgs.lib.splitString "." tool.attrPath;
 	    pkg = pkgs.lib.getAttrFromPath path pkgs';
 	  in pkg
 	) tools;
-	pkgsEnv = pkgs.buildEnv { name = "tools"; paths = lib.attrValues packages; }; 
+	pkgsEnv = pkgs.buildEnv { name = "tools"; paths = pkgs.lib.attrValues packages; }; 
 	devShell = pkgs.mkShell { buildInputs = [ pkgsEnv ]; };
     `
 	w(0, strings.ReplaceAll(outs, "\t", "  "))
