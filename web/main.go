@@ -179,7 +179,7 @@ func renderDefaultNix(args []string) (string, error) {
 	) tools;
 	packages = pkgs.lib.mapAttrs (name: tool:
 	  let 
-	    pkgs' = import nixpkgs.${name} { system = pkgs.system; config = pkgs.config.nixpkgs or {}; };
+	    pkgs' = import nixpkgs.${name} { inherit (pkgs) system config; };
 	    path = pkgs.lib.splitString "." tool.attrPath;
 	    pkg = pkgs.lib.getAttrFromPath path pkgs';
 	  in pkg
