@@ -1,0 +1,12 @@
+$ nix-versions --lazamar emacs@ --one
+<span style="color:#AAA">Name</span>   <span style="color:#AAA">Attribute</span>  <span style="color:#AAA">Version</span>  <span style="color:#AAA">Flake</span>    <span style="color:#AAA">Revision</span>
+<span style="color:#FFF">emacs</span>  <span style="color:#FFF">emacs30</span>    <span style="color:#5F5">30.0.93</span>  <span style="color:#FFF">nixpkgs</span>  <span style="color:#FFF">21808d22b1cda1898b71cf1a1beb524a97add2c4</span>
+
+$ nix-versions --nixhub emacs@ --one
+<span style="color:#AAA">Name</span>   <span style="color:#AAA">Attribute</span>  <span style="color:#AAA">Version</span>  <span style="color:#AAA">Flake</span>    <span style="color:#AAA">Revision</span>
+<span style="color:#FFF">emacs</span>  <span style="color:#FFF">emacs</span>      <span style="color:#5F5">30.1</span>     <span style="color:#FFF">nixpkgs</span>  <span style="color:#FFF">0740f6f238767d4caf9afe774d3e88105766dfc6</span>
+
+$ nix-versions lazamar:emacs@   nixhub:emacs@   --one
+<span style="color:#AAA">Name</span>   <span style="color:#AAA">Attribute</span>  <span style="color:#AAA">Version</span>  <span style="color:#AAA">Flake</span>    <span style="color:#AAA">Revision</span>
+<span style="color:#FFF">emacs</span>  <span style="color:#FFF">emacs30</span>    <span style="color:#5F5">30.0.93</span>  <span style="color:#FFF">nixpkgs</span>  <span style="color:#FFF">21808d22b1cda1898b71cf1a1beb524a97add2c4</span>
+<span style="color:#FFF">emacs</span>  <span style="color:#FFF">emacs</span>      <span style="color:#5F5">30.1</span>     <span style="color:#FFF">nixpkgs</span>  <span style="color:#FFF">0740f6f238767d4caf9afe774d3e88105766dfc6</span>

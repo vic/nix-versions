@@ -1,0 +1,130 @@
+NAME
+
+    nix-versions - List Nix packages versions.
+
+SYNOPSIS
+
+    nix-versions [&lt;options&gt;] &lt;package-spec&gt;...
+    
+DESCRIPTION
+
+    List available package versions.
+
+    See the README at https://github.com/vic/nix-versions for Examples.
+
+
+PACKAGE SPEC
+
+   A package spec looks like: `&lt;package-name&gt;@&lt;version-constraint&gt;`.
+   
+   For example, having `emacs@~29`, `emacs` is the package-name, 
+   and `~29` is a version constraint.  Using this spec, `nix-versions` will 
+   list available versions of emacs that match the 29 release series.
+
+
+   PACKAGE NAME
+
+   A package name can be one of:
+
+   * The attribute path of an installable in the nixpkgs tree.
+     These are normally guessable, but some packages like pip are nested inside a package-set.
+
+     `go`
+     `emacs`
+     `nodejs`
+     `python312Packages.pip`
+     `cargo`
+
+     Use https://search.nixos.org or `nix run nixpkgs#nix-search-cil` to 
+     find the package name for those not guessable at first try.
+
+   * A flake installable.
+
+     Any package provided by a flake. This will bypass version search but
+     will still try to validate the installable against any specified version
+     constraint.
+
+     `nixpkgs#cargo`
+     `nixpkgs/nixos-24.11#ruby`
+     `github:vic/gleam-nix/main#gleam`
+
+   * A program name.
+
+     `bin/rustc`  - Packages providing the `rustc` program.
+     `bin/*rust*` - Packages with any program containing `rust` on its name.
+
+   VERSION CONSTRAINT
+
+     See https://github.com/Masterminds/semver for more details on the
+     syntax of constraints.
+
+     If the value after `@` is the path to a file. That file will be read
+     and its content will be used as version constraint.
+     eg, for ruby you could use: `ruby@.ruby-version`
+
+   SEARCH BACKEND
+
+     When a spec has a version constraint (includes `@`) a backend will be
+     used to search for available versions. If no version constraint is
+     present, only the most-recent version known to the local nixpkgs
+     instance will be shown.
+     
+     Default backend is https://nixhub.io. The default backend for specs
+     that are not explicit about one can be changed using the 
+     `--nixhub` or `--lazamar` options.
+
+     An spec can specify a particular backend to use for it.
+     `nixhub:go@latest` or `lazamar:nixpkgs-unstable:emacs@latest`.
+
+
+UNCOMPLICATED VERSION MANAGER AND DEVELOPMENT SHELL
+
+You can store package specs in a plain-text file and
+use the `--one --installable --read FILE` options to
+load it into a `nix shell`.
+
+Also, since version constraints can be read from plain
+text files, you can keep using your `.java-version`/`.node-versions`/etc
+files.
+
+See the https://github.com/vic/nix-versions for more examples.
+
+
+COMMAND LINE OPTIONS
+
+    --help  -h          Print this help and exit.
+
+    --read  -r FILE     Package specs are read from FILE.
+
+  SEARCH BACKEND
+
+     --nixhub  -n       Will default to https://nixhub.io for version search.
+
+     --lazamar -l       Will default to https://lazamar.co.uk/nix-versions/.
+
+     --channel -c CHAN  Use CHAN as when searching with Lazamar.
+                        Default is `nixpkgs-unstable`.
+
+  OUTPUT FORMAT
+
+    --json  -j          Output a JSON array of resolved packages.
+
+    --text  -t          Output as a text table. [default]
+
+    --installable -i    Print as a list of Nix installables.
+
+    --flake  -f         Generate a flake. See also: `ntv init`
+
+  TEXT OUTPUT OPTIONS
+
+    --color -C   Use colors on text table to highlight selected versions.
+
+    --all  -a    Show all versions even those not matching a constraint
+
+    --one  -1    Show only the latest version matching a constraint.
+
+
+NTV
+
+  `nix-versions` is part of the [ntv](https://github.com/vic/ntv) suite,
+  Made with Love(tm) by [vic](https://x.com/oeiuwq).

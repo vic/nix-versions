@@ -1,3 +1,7 @@
+---
+order: 1
+---
+
 # All you need is Nix
 
 Since you will be installing packages from the [nixpkgs repository](https://github.com/nixos/nixpkgs),
@@ -7,7 +11,7 @@ If you are running on a [NixOS System](https://nixos.org/download/) you are all 
 
 Otherwise you can install it on any Linux, MacOS, Windows-WSL2. We recommend either the [Lix](https://git.lix.systems/lix-project/lix-installer) or [Determinate](https://github.com/DeterminateSystems/nix-installer) nix installers.
 
-# Running `nix-versions` directly.
+## Running `nix-versions` directly.
 
 Just run this command and skip all of this section.
 
@@ -15,12 +19,13 @@ Just run this command and skip all of this section.
 nix run github:vic/nix-versions
 ```
 
-> \[!NOTE\] Note: On enabling Nix Flakes and the Modern Nix command.
-> If this is your first time using nix, it's possible that you might need to enable:
-> `--extra-experimental-features 'flakes nix-command'`
-> at the command line or [enable those features at your nix.conf file](https://www.tweag.io/blog/2020-05-25-flakes/#trying-out-flakes)
+::: note Enabling Nix Flakes and the Modern Nix command.
+ If this is your first time using nix, it's possible that you might need to enable:
+ `--extra-experimental-features 'flakes nix-command'`
+ at the command line or [enable those features at your nix.conf file](https://www.tweag.io/blog/2020-05-25-flakes/#trying-out-flakes)
+ :::
 
-# Installing on your system.
+## Installing on your system.
 
 If you want to avoid typing `nix run` everytime, you might consider
 installing `nix-versions` on your profile.
@@ -30,6 +35,3 @@ nix profile install github:vic/nix-versions
 nix-versions --help
 ```
 
-###### Next step
-
-Now that `nix-versions` is available, you are ready to query some package versions.

@@ -4,7 +4,7 @@ title: Home
 
 actions:
   - text: Get Started
-    link: /guide/installing.html
+    link: /getting-started/installing.html
     type: primary
 
   - text: Visit at GitHub
@@ -47,15 +47,32 @@ footer: Kindly hosted by <a href="https://alwaysdata.com">AlwaysData</a> | Made 
 # Try it now.
 <br/>
 
-###### As a command line utility
-```
+### As a command line utility
+```shell
 nix run github:vic/nix-versions -- 'emacs@~27 || ~29' --all
 ```
+<details><summary>see command output</summary>
+<pre class="ansi-to-html">
+<!-- @include: ./guide/emacs-27-29-all.ansi.html -->
+</pre>
+</details>
 
-###### As a flake generator webservice.
 
-```
+### As a flake.nix generator
+> You can use our `flake.zip` endpoint as an input on your own `flake.nix` or `devenv.yaml`.<br/>
+> There's also `flake.nix` endpoint that outputs a text file.
+```shell
 nix develop 'https://nix-versions.alwaysdata.net/flake.zip/cowsay@latest/go@1.24.x' --output-lock-file /dev/null
 ```
+<details><summary>see command output</summary>
+<pre class="ansi-to-html">
+<!-- @include: ./flake-zip-cowsay-develop.ansi.html -->
+</pre>
+</details>
 
-same as `nix-versions --flake cowsay@latest > flake.nix`, but the webservice can be use as input on your own `flake.nix` or `devenv.yaml`
+### As a default.nix generator
+> We also provide `default.{nix,zip}` endpoints.<br/>
+> Compatible with `fetchurl`, `fetchzip` on non-flake environments.
+```shell
+nix-shell 'https://nix-versions.alwaysdata.net/default.zip/cowsay@latest' -A devShell --run "cowsay hello"
+```

@@ -16,9 +16,14 @@
 
           commands = [
             {
-              name = "develop-docs";
+              name = "serve-docs";
               help = "Local docs devserver";
               command = "cd docs; npm run dev";
+            }
+            {
+              name = "serve-web";
+              help = "Local web server";
+              command = "cd web; go run main.go";
             }
           ];
 

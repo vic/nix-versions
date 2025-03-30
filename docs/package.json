@@ -12,7 +12,7 @@
     "update-package": "npx vp-update"
   },
   "devDependencies": {
-    "@vuepress/bundler-webpack": "^2.0.0-rc.20",
+    "@vuepress/bundler-vite": "^2.0.0-rc.20",
     "patch-package": "^8.0.0",
     "sass-embedded": "^1.86.0",
     "sass-loader": "^16.0.5",
