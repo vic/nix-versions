@@ -1,6 +1,5 @@
 ---
-order: -2
-headerDepth: 6
+order: -3
 ---
 
 # Tools Version Manager
