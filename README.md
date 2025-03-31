@@ -1,4 +1,4 @@
-# `nix-versions` - All versions of nixpkgs at your fingerprints. 
+# `nix-versions` - All versions of nixpkgs at your fingerprints.
 
 `nix-versions` is a CLI tool that can help you [find the nixpkgs revision for particular versions of a package](https://nix-versions.alwaysdata.net/getting-started/listing-versions.html).
 
