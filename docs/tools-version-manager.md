@@ -11,11 +11,6 @@ combined with [`nix shell`](https://nix.dev/manual/nix/2.26/command-ref/nix-shel
 The idea is simple:
 <em>No nix-wizardy required</em>, just use plain-text files to specify your tool requirements and let `nix-versions` produce output that `nix shell` and `direnv` can use to give you an stable development environment.
 
-As a Tools Version Manager, it can replace 90% of what tools like [asdf-vm](https://asdf-vm.com/) do, 
-but with all the benefits you can get from Nix: 
-All installable tools from Nixpkgs at your fingerprints, Reproducibility, Security Checksums, Sandboxed Builds, Remote Builders, Caching, etc. 
-And of course, pinned version packages by `nix-versions`.
-
 
 ::: info [Flake Generator](flake-generator.html) For Advanced Nix users
 If you already know Nix, and want to use pinned-version packages as inputs for your own Nix Flake 
@@ -24,15 +19,19 @@ or integrate with state-of-the-art Nix environments like
 <b>See our [flake generator](flake-generator.html) service.</b>
 :::
 
+#### Target Audience
+
+As a Tools Version Manager, the pattern presented on this page can replace 90% of what tools like [asdf-vm](https://asdf-vm.com/) do, 
+but with all the benefits you can get from Nix: 
+All installable tools from Nixpkgs at your fingerprints, Reproducibility, Security Checksums, Sandboxed Builds, Remote Builders, Caching, etc. 
+And of course, pinned version packages by `nix-versions`.
+
+If you are new to Nix but have used other version managers like `nvm`, `rvm`, `asdf`, `mise` we want to provide you with an integrated toolset that lets you take advantage of Nix 
+without mandating you to learn the nix-language. By editing plain-text files and reusing your existing `.ruby-version`, `.node-version`, etc files, you can cover most of your needs.
 
 ## How it works
 
 By playing well with others. Following the UNIX philosophy of doing just ONE thing (listing package versions) and produce plain-text output that can be used by other programs to become part of something bigger.
-
-
-Simplicity. Instead of trying to solve problems that other tools have already do.
-Let people edit plain-text files instead of creating commands to edit them.
-
 
 #### The `Nix Installables` output format
 
