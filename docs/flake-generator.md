@@ -18,6 +18,19 @@ curl https://nix-versions.alwaysdata.net/flake.nix/ruby@latest/nodejs@latest -o 
 curl https://nix-versions.alwaysdata.net/flake.zip/ruby@latest/nodejs@latest -o flake.zip
 ```
 
+## Keeping up to date with versioned packages
+
+One advantage of using our generated flakes as inputs for your own flakes is that if you have:
+
+`inputs.tools.url = "https://nix-versions.alwaysdata.net/flake.zip/go@~1.24"`
+
+then, every time you do `nix flake update tool` you are certain that if new versions of go are
+available matching that `~1.24` constraint, you will get the new version. But if an incompatible
+version is availabe you wont get that update. 
+
+This ensures your packages are still updated but compatible with the version constraint you
+identify as stable releases.
+
 
 ## Generated Flake features
 
