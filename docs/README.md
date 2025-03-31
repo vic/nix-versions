@@ -53,7 +53,7 @@ nix run github:vic/nix-versions -- 'emacs@~27 || ~29' --all
 ```
 <details><summary>see command output</summary>
 <pre class="ansi-to-html">
-<!-- @include: ./guide/emacs-27-29-all.ansi.html -->
+<!-- @include: ./getting-started/emacs-27-29-all.ansi.html -->
 </pre>
 </details>
 
