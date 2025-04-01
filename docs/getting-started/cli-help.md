@@ -4,7 +4,7 @@ order: -1
 # CLI Options
 
 ```shell
-nix-versions --help
+<!-- @include: ./cli-help.ansi.bash -->
 ```
 <pre class="ansi-to-html">
 <!-- @include: ./cli-help.ansi.html -->

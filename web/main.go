@@ -37,7 +37,10 @@ func main() {
 }
 
 func searchSpecs(args []string) (search.PackageSearchResults, error) {
-	specs, err := search_spec.ParseSearchSpecs(args, nil)
+	backend := search_spec.VersionsBackend{
+		NixHub: &search_spec.Unit{},
+	}
+	specs, err := search_spec.ParseSearchSpecs(args, backend)
 	if err != nil {
 		return nil, err
 	}

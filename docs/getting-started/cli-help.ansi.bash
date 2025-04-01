@@ -1,0 +1,1 @@
+nix-versions --help

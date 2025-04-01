@@ -8,7 +8,7 @@ order: 2
 In the following example, `emacs@` is a package spec, and is equivalent to `emacs@*`, that is, emacs at any version (no-constraint).
 
 ```shell
-nix-versions emacs@
+<!-- @include: ./emacs-all.ansi.bash -->
 ```
 <details><summary>see command output</summary>
 <pre class="ansi-to-html">
@@ -21,7 +21,7 @@ If you dont include an `@` symbol, `nix-versions` will show what version is avai
 nixpkgs tree.
 
 ```shell
-nix-versions emacs
+<!-- @include: ./emacs-local.ansi.bash -->
 ```
 <details><summary>see command output</summary>
 <pre class="ansi-to-html">
@@ -36,15 +36,14 @@ A version constraint lets you filter by only those versions that match a particu
 This is a very useful feature when you need to keep your tools in a range of known, stable versions.
 For example, you might need that your compiler/interpreter is always compatible with your current code, even if the nixpkgs tree is bleeding edge and contains latest versions that you might be not be ready to use.
 
-::: info Constraint syntax
+::: tip Constraint syntax
 For more information on the supported constraint syntax, read the documentation of the library we use:  [semver constraints](https://github.com/Masterminds/semver?tab=readme-ov-file#checking-version-constraints).
 :::
 
 Using the previous emacs example, lets filter by just a pair of release series.
 
 ```shell
-# show only emacs 27 and 29 release series.
-nix-versions 'emacs@~27 || ~29'
+<!-- @include: ./emacs-27-29.ansi.bash -->
 ```
 <details><summary>see command output</summary>
 <pre class="ansi-to-html">
@@ -52,8 +51,7 @@ nix-versions 'emacs@~27 || ~29'
 </pre>
 </details>
 
-::: tip Tip: use `--all` (short: `-a`) to visualize the matching versions compared to all others.
-:::
+Use `--all` (short: `-a`) to visualize the matching versions compared to all others.
 
 ```shell
 nix-versions 'emacs@~27 || ~29' --all
@@ -68,11 +66,10 @@ nix-versions 'emacs@~27 || ~29' --all
 As you can see, coloring can help visualising the selected versions matching an specified constraint and also
 the latest version in all the set. You can turn off colors using the `--color=false` [option](cli-help.html).
 
-::: tip Tip: use `--one` (short: `-1`) to show only the latest version that matches an specified constraint.
-:::
+Use `--one` (short: `-1`) to show only the latest version that matches an specified constraint.
 
 ```shell
-nix-versions 'emacs@~27 || ~29' --one
+<!-- @include: ./emacs-27-29-one.ansi.bash -->
 ```
 <details><summary>see command output</summary>
 <pre class="ansi-to-html">

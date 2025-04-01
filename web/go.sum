@@ -23,8 +23,8 @@ github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWE
 github.com/mattn/go-isatty v0.0.20/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
 github.com/peterldowns/nix-search-cli v0.2.0 h1:e3K1SOyH1ZfN0Lz3WEtqQSXu0JDlxIkwPAmo9K9I4SU=
 github.com/peterldowns/nix-search-cli v0.2.0/go.mod h1:oiHS+WiGbQW3qjon8+UEPnTB8RK9M0XdufwGGsogjtg=
-github.com/vic/ntv v0.0.0-20250327225243-d65149017dc0 h1:e1aydoULAf79Qco4bQ7R6MFmYVZfxq7nSinzMyYRmtE=
-github.com/vic/ntv v0.0.0-20250327225243-d65149017dc0/go.mod h1:NPx4zbfuDbbfeQBIbOZT48C1olVHry8beztxtTY555U=
+github.com/vic/ntv v0.0.0-20250401182447-792d4321b68b h1:uBKQCcOwnVLFur5BSJVf20l3hKW5g+YIU6Olsu5PRWY=
+github.com/vic/ntv v0.0.0-20250401182447-792d4321b68b/go.mod h1:NPx4zbfuDbbfeQBIbOZT48C1olVHry8beztxtTY555U=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20210921155107-089bfa567519/go.mod h1:GvvjBRRGRdwPK5ydBHafDWAxML/pGHZbMvKqRZ5+Abc=

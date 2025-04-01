@@ -2,7 +2,7 @@ module github.com/vic/nix-versions
 
 go 1.24.1
 
-require github.com/vic/ntv v0.0.0-20250324061546-b4329af24ecc
+require github.com/vic/ntv v0.0.0-20250401182447-792d4321b68b
 
 require (
 	github.com/Masterminds/semver/v3 v3.3.1 // indirect

@@ -9,10 +9,10 @@ import (
 )
 
 func main() {
-	if len(os.Args) < 2 {
-		list.HelpAndExit("nix-versions", 1)
+	args, err := list.Help.ParseAndRun(os.Args)
+	if err == nil {
+		err = list.NewListArgs().ParseAndRun(args)
 	}
-	err := list.NewListArgs().ParseAndRun(os.Args[1:])
 	if err != nil {
 		if ee, ok := err.(*exec.ExitError); ok {
 			log.Fatal(string(ee.Stderr))

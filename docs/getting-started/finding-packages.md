@@ -54,8 +54,7 @@ See `nix-search-cli --help` for more advanced examples.
 This is a feature we have borrowed from `nix-search-cli`, since it might be useful to search directly by the name of a provided program.
 
 ```shell
-# Packages that provide a program named exactly `gleam`
-nix-versions bin/gleam@'>1.6'
+<!-- @include: ./find-gleam-program.ansi.bash -->
 ```
 <details><summary>see command output</summary>
 <pre class="ansi-to-html">
@@ -65,7 +64,7 @@ nix-versions bin/gleam@'>1.6'
 
 When multiple packages provide different implementations of a command (eg. different ruby interpreters)
 ```shell
-nix-versions bin/ruby
+<!-- @include: ./find-ruby-program.ansi.bash -->
 ```
 <details><summary>see command output</summary>
 <pre class="ansi-to-html">
@@ -82,7 +81,7 @@ Using the Lazamar index, you can search for versions of programs at a particular
 The following example lists the latest versions of emacs at `nixos-21.05`, `nixos-23.05` and `nixpkgs-unstable`.
 
 ```shell
-nix-versions lazamar:nixos-21.05:emacs@ lazamar:nixos-23.05:emacs@ lazamar:nixpkgs-unstable:emacs@ --one
+<!-- @include: ./lazamar-channels.ansi.bash -->
 ```
 <details><summary>see command output</summary>
 <pre class="ansi-to-html">
@@ -99,9 +98,7 @@ If no prefix has been specified, the default versions backend is used (NixHub). 
 override the default backend via the `--nixhub`, `--lazamar`, `--lazamar-channel <channel>` [options](cli-help.html).
 
 ```shell
-nix-versions --lazamar emacs@ --one
-nix-versions --nixhub  emacs@ --one
-nix-versions lazamar:emacs@ nixhub:emacs@ --one
+<!-- @include: ./versions-backends.ansi.bash -->
 ```
 <details><summary>see command output</summary>
 <pre class="ansi-to-html">
