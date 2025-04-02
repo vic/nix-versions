@@ -1,5 +1,5 @@
 ---
-order: -3
+order: -4
 ---
 
 # Tools Version Manager
@@ -59,12 +59,17 @@ nix-versions --read .nix_tools --installable
 The `.nix_tools` file can look like this:
 ```text
 # shell-like comments are ignored.
-go@>=1.24.x              # version constraints must not include spaces.
+# You can use `pkg@version` as in nix-versions command line
 ruby@latest              # same as `ruby@` or `ruby@*`, ie. no version restriction.
-nodejs@.node-version     # read version constraint from an existing file.
+
+# You can use spaces/tabs after the package name, just like .tool-versions files from asdf.
+# And it also looks much cleaner.
+
+go       >= 1.24  <1.26   # white space/tabs are not significant.
+nodejs   .node-version    # read version constraint from an existing file.
 ```
 
-As you can see from the previous example, you can re-use your existing `.ruby-version`, `.node-version`, etc files that might be already in use in your project.
+As you can see from the previous example, you can re-use your existing `.ruby-version`, `.node-version`, `.tool-versions`, etc files that might be already in use in your project.
 
 
 ## Entering a `nix shell` environment

@@ -1,0 +1,1 @@
+nix-versions --one system:emacs emacs nixhub:emacs lazamar:emacs lazamar:nixos-23.05:emacs history:emacs 

@@ -2,7 +2,7 @@
 order: -2
 ---
 
-# Flake Generator Service
+# Flake Generator Endpoint
 
 We provide a couple of flake related endpoints that can generate a fully working flake with
 the package specs you provide.
@@ -20,19 +20,23 @@ curl https://nix-versions.alwaysdata.net/flake.zip/ruby@latest/nodejs@latest -o 
 
 ## Keeping up to date with versioned packages
 
-One advantage of using our generated flakes as inputs for your own flakes is that if you have:
+One advantage of using pinned-versions flakes as inputs for your own flakes is that if you have:
 
-`inputs.tools.url = "https://nix-versions.alwaysdata.net/flake.zip/go@~1.24"`
+```nix
+{
+  inputs.tools.url = "https://nix-versions.alwaysdata.net/flake.zip/go@~1.24/*.pip@25";
+}
+```
 
-then, every time you do `nix flake update tool` you are certain that if new versions of go are
-available matching that `~1.24` constraint, you will get the new version. But if an incompatible
-version is availabe you wont get that update. 
+then, every time you do `nix flake update tools` you are certain that if new versions of go or pip are
+available matching their respective constraint, you will get the new versions. But if an incompatible
+version is availabe you wont get that update, preventing potential problems in your dev environment.
 
 This ensures your packages are still updated but compatible with the version constraint you
 identify as stable releases.
 
 
-## Generated Flake features
+## Generated Flake outputs
 
 You can inspect the content of generated flake.zip with the following command:
 
@@ -42,16 +46,16 @@ nix flake show https://nix-versions.alwaysdata.net/flake.zip/go@1.24.x/ruby@~3.4
 
 Requesting for `go@1.24.x` and `ruby@~3.4` will generate a flake with the following structure:
 
-```
+```nix
 {
   overlays.default  # An overlay containing `{ ruby = ...; go = ...; }` at their respective versions.
   packages.${system} = {
-    go = ...      # Go package at specified version
-    ruby = ...    # Ruby package at specified version
-    default = ... # An envrionment (`buildEnv`) contaning the paths of specified tools.
+    go = ...;      # Go package at specified version
+    ruby = ...;    # Ruby package at specified version
+    default = ...; # An envrionment (`buildEnv`) contaning the paths of specified tools.
   };
   devShells.${system} = {
-    default = ... # A numtide/devshell with the specified tools.
+    default = ...; # A numtide/devshell with the specified tools.
   };
 }
 ```

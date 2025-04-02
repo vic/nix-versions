@@ -1,1 +1,1 @@
-nix-versions emacs
+nix-versions system:emacs

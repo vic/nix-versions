@@ -1,0 +1,1 @@
+nix-versions 'leanify@^\d+-12-\d+$' --all
