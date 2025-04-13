@@ -70,9 +70,9 @@ nix develop 'https://nix-versions.alwaysdata.net/flake.zip/cowsay@latest/go@1.24
 </pre>
 </details>
 
-### As a default.nix generator
-> We also provide `default.{nix,zip}` endpoints.<br/>
-> Compatible with `fetchurl`, `fetchzip` on non-flake environments.
+### As a direnv shell generator
+> Our `use_nix_tools.bash` endpoint can get you a `direnv` shell in no time!<br/>
+> You don't even need `nix-versions` installed, just `nix` and `direnv`.
 ```shell
-nix-shell 'https://nix-versions.alwaysdata.net/default.zip/cowsay@latest' -A devShell --run "cowsay hello"
+direnv fetchurl "https://nix-versions.alwaysdata.net/use_nix_tools.bash/ruby/cowsay"
 ```
