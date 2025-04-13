@@ -28,7 +28,7 @@ And of course, pinned version packages by `nix-versions`.
 If you are new to Nix but have used other version managers like `nvm`, `rvm`, `asdf`, `mise` we want to provide you with an integrated toolset that lets you take advantage of Nix
 without mandating you to learn the nix-language. By editing plain-text files and reusing your existing `.ruby-version`, `.node-version`, etc files, you can cover most of your needs.
 
-::: info ⚡ Fast Track ⚡ 🏃 - The `use_nix_tools.bash` endpoint.
+::: info ⚡ Fast Track ⚡ - 🏃 The quick-n-dirty `use_nix_tools.sh` endpoint.
 
 If you already have Nix and direnv installed, you can quickly get an environment ready in no time.
 Note that you don't even need `nix-versions` installed locally for this to work.
@@ -40,13 +40,13 @@ You will notice a `use_nix_installables` function, that you can use independentl
 
 ```bash
 # Place this on your .envrc
-source_url "https://nix-versions.alwaysdata.net/use_nix_tools.bash/go/ruby" HASH
+source_url "https://nix-versions.alwaysdata.net/use_nix_tools.sh/go/ruby" HASH
 ```
 
 Where `HASH` can be obtained with:
 
 ```bash
-direnv fetchurl "https://nix-versions.alwaysdata.net/use_nix_tools.bash/go/ruby"
+direnv fetchurl "https://nix-versions.alwaysdata.net/use_nix_tools.sh/go/ruby"
 ```
 
 You can obtian package updates by doing `direnv reload`.
@@ -120,13 +120,13 @@ echo 'eval "$(direnv hook bash)"' >> $HOME/.bashrc # hook on your shell
 :::
 
 
-All you need now is to create the following file `$HOME/.config/direnv/lib/use_nix_tools.bash`. This file
+All you need now is to create the following file `$HOME/.config/direnv/lib/use_nix_tools.sh`. This file
 will install a function that all your projects can use to load their respective environment.
 
 ```shell
 mkdir -p ~/.config/direnv/lib
 # You can always inspect the downloaded function before installing it
-curl "https://nix-versions.alwaysdata.net/use_nix_tools.bash" -o ~/.config/direnv/lib/use_nix_tools.bash
+curl "https://nix-versions.alwaysdata.net/use_nix_tools.sh" -o ~/.config/direnv/lib/use_nix_tools.sh
 ```
 
 Then, on your project directory, besides your `.nix_tools` file, create an `.envrc` file that will be

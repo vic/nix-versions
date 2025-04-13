@@ -22,12 +22,12 @@ import (
 	"github.com/vic/ntv/packages/search_spec"
 )
 
-//go:embed use_nix_tools.bash
+//go:embed use_nix_tools.sh
 var use_nix_tools_bash string
 
 func main() {
-	http.HandleFunc("/use_nix_tools.bash", HandleUseNixToolsBash)
-	http.HandleFunc("/use_nix_tools.bash/", HandleUseNixToolsBash)
+	http.HandleFunc("/use_nix_tools.sh", HandleUseNixToolsBash)
+	http.HandleFunc("/use_nix_tools.sh/", HandleUseNixToolsBash)
 	http.HandleFunc("/flake.nix/", HandleFlakeNix)
 	http.HandleFunc("/flake.zip/", HandleFlakeZip)
 	http.HandleFunc("/default.nix/", HandleDefaultNix)
@@ -55,7 +55,7 @@ func HandleUseNixToolsBash(w http.ResponseWriter, r *http.Request) {
 	werr := func(err error) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-	path := strings.TrimPrefix(r.URL.Path, "/use_nix_tools.bash")
+	path := strings.TrimPrefix(r.URL.Path, "/use_nix_tools.sh")
 	parts := getParts(path)
 	fmt.Println("Gen use_nix_tools_bash: ", parts)
 	installables := make([]string, 0)
@@ -73,7 +73,7 @@ func HandleUseNixToolsBash(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/x-shellscript")
-	w.Header().Set("Content-Disposition", "attachment; filename=use_nix_tools.bash")
+	w.Header().Set("Content-Disposition", "attachment; filename=use_nix_tools.sh")
 	w.Header().Set("Cache-Control", "no-cache")
 	w.Header().Set("Pragma", "no-cache")
 	w.Header().Set("Expires", "0")
