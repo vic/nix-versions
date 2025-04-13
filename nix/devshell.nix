@@ -63,6 +63,14 @@
         '';
         meta.description = "Generate HTML from ANSI (*.ansi.bash -> *.ansi.html)";
       };
+
+      restart-web = pkgs.writeShellApplication {
+        name = "restart-web";
+        text = ''
+          curl --basic --user "$WEB_ADMIN_API_KEY account=nix-versions:" -X POST "$WEB_ADMIN_API_URL" "$@"
+        '';
+        meta.description = "Restart production web server";
+      };
     in
     {
       devshells.default =
@@ -78,6 +86,7 @@
             { package = go-web; }
             { package = develop-docs; }
             { package = gen-ansi-html; }
+            { package = restart-web; }
           ];
 
           env = [
