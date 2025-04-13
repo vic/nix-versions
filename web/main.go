@@ -5,12 +5,14 @@ import (
 	"bytes"
 	"context"
 	"crypto/sha256"
+	_ "embed"
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
 	"io"
 	"net/http"
 	"os"
+	"slices"
 	"strings"
 
 	"golang.org/x/sync/errgroup"
@@ -20,7 +22,12 @@ import (
 	"github.com/vic/ntv/packages/search_spec"
 )
 
+//go:embed use_nix_tools.bash
+var use_nix_tools_bash string
+
 func main() {
+	http.HandleFunc("/use_nix_tools.bash", HandleUseNixToolsBash)
+	http.HandleFunc("/use_nix_tools.bash/", HandleUseNixToolsBash)
 	http.HandleFunc("/flake.nix/", HandleFlakeNix)
 	http.HandleFunc("/flake.zip/", HandleFlakeZip)
 	http.HandleFunc("/default.nix/", HandleDefaultNix)
@@ -34,6 +41,47 @@ func main() {
 	}
 	fmt.Println("Listening on", addr)
 	http.ListenAndServe(addr, nil)
+}
+
+func getParts(path string) []string {
+	parts := strings.Split(path, "/")
+	parts = slices.DeleteFunc(parts, func(p string) bool {
+		return len(strings.TrimSpace(p)) == 0
+	})
+	return parts
+}
+
+func HandleUseNixToolsBash(w http.ResponseWriter, r *http.Request) {
+	werr := func(err error) {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	path := strings.TrimPrefix(r.URL.Path, "/use_nix_tools.bash")
+	parts := getParts(path)
+	fmt.Println("Gen use_nix_tools_bash: ", parts)
+	installables := make([]string, 0)
+
+	if len(parts) > 0 {
+		fmt.Println("Searching ", parts)
+		results, err := searchSpecs(parts)
+		if err != nil {
+			werr(err)
+			return
+		}
+		for _, res := range results {
+			installables = append(installables, res.Installable(res.Selected))
+		}
+	}
+
+	w.Header().Set("Content-Type", "application/x-shellscript")
+	w.Header().Set("Content-Disposition", "attachment; filename=use_nix_tools.bash")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Pragma", "no-cache")
+	w.Header().Set("Expires", "0")
+	fmt.Fprint(w, use_nix_tools_bash)
+
+	if len(installables) > 0 {
+		fmt.Fprintf(w, "\nuse nix_installables %s\n", strings.Join(installables, " "))
+	}
 }
 
 func searchSpecs(args []string) (search.PackageSearchResults, error) {
@@ -161,14 +209,14 @@ func renderDefaultNix(args []string) (string, error) {
 	}
 	outs := `
 	nixpkgs = pkgs.lib.mapAttrs (name: tool:
-	  let 
-	    archive = pkgs.fetchurl { 
+	  let
+	    archive = pkgs.fetchurl {
 		  name = "${name}-${tool.version}-nixpkgs.tar.gz";
 	      url = tool.url;
 	      hash = tool.hash;
 	    };
 		# since our sri was computed on the tarball, we need to unpack it
-		# we could use fetchzip, but we'd have to extract the tarball on 
+		# we could use fetchzip, but we'd have to extract the tarball on
 		# the server to compute recursive sri (which we wont do).
 		unpacked = pkgs.stdenvNoCC.mkDerivation {
 		  name = "${name}-${tool.version}-nixpkgs";
@@ -181,13 +229,13 @@ func renderDefaultNix(args []string) (string, error) {
 	  in unpacked
 	) tools;
 	packages = pkgs.lib.mapAttrs (name: tool:
-	  let 
+	  let
 	    pkgs' = import nixpkgs.${name} { inherit (pkgs) system config; };
 	    path = pkgs.lib.splitString "." tool.attrPath;
 	    pkg = pkgs.lib.getAttrFromPath path pkgs';
 	  in pkg
 	) tools;
-	pkgsEnv = pkgs.buildEnv { name = "tools"; paths = pkgs.lib.attrValues packages; }; 
+	pkgsEnv = pkgs.buildEnv { name = "tools"; paths = pkgs.lib.attrValues packages; };
 	devShell = pkgs.mkShell { buildInputs = [ pkgsEnv ]; };
     `
 	w(0, strings.ReplaceAll(outs, "\t", "  "))
@@ -201,7 +249,7 @@ func HandleDefaultNix(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	path := strings.TrimPrefix(r.URL.Path, "/default.nix/")
-	parts := strings.Split(path, "/")
+	parts := getParts(path)
 	fmt.Println("Gen default.nix: ", parts)
 
 	nix, err := renderDefaultNix(parts)
@@ -223,7 +271,7 @@ func HandleFlakeNix(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	path := strings.TrimPrefix(r.URL.Path, "/flake.nix/")
-	parts := strings.Split(path, "/")
+	parts := getParts(path)
 	fmt.Println("Gen flake.nix: ", parts)
 
 	flake, err := renderFlake(parts)
@@ -245,7 +293,7 @@ func HandleDefaultZip(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	path := strings.TrimPrefix(r.URL.Path, "/default.zip/")
-	parts := strings.Split(path, "/")
+	parts := getParts(path)
 	fmt.Println("Gen default.zip: ", parts)
 
 	nix, err := renderDefaultNix(parts)
@@ -274,7 +322,7 @@ func HandleFlakeZip(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	path := strings.TrimPrefix(r.URL.Path, "/flake.zip/")
-	parts := strings.Split(path, "/")
+	parts := getParts(path)
 	fmt.Println("Gen flake.zip: ", parts)
 
 	flake, err := renderFlake(parts)

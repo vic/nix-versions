@@ -12,21 +12,45 @@ The idea is simple:
 
 
 ::: info [Flake Generator](flake-generator.html) For Advanced Nix users
-If you already know Nix, and want to use pinned-version packages as inputs for your own Nix Flake 
-or integrate with state-of-the-art Nix environments like 
+If you already know Nix, and want to use pinned-version packages as inputs for your own Nix Flake
+or integrate with state-of-the-art Nix environments like
 [devenv](https://devenv.sh/) or [devshell](https://github.com/numtide/devshell), `NixOS/nix-darwin/home-manager` or any other nix module class.
 <b>See our [flake generator](flake-generator.html) service.</b>
 :::
 
 #### Target Audience
 
-As a Tools Version Manager, the pattern presented on this page can replace 90% of what tools like [asdf-vm](https://asdf-vm.com/) do, 
-but with all the benefits you can get from Nix: 
-All installable tools from Nixpkgs at your fingerprints, Reproducibility, Security Checksums, Sandboxed Builds, Remote Builders, Caching, etc. 
+As a Tools Version Manager, the pattern presented on this page can replace 90% of what tools like [asdf-vm](https://asdf-vm.com/) do,
+but with all the benefits you can get from Nix:
+All installable tools from Nixpkgs at your fingerprints, Reproducibility, Security Checksums, Sandboxed Builds, Remote Builders, Caching, etc.
 And of course, pinned version packages by `nix-versions`.
 
-If you are new to Nix but have used other version managers like `nvm`, `rvm`, `asdf`, `mise` we want to provide you with an integrated toolset that lets you take advantage of Nix 
+If you are new to Nix but have used other version managers like `nvm`, `rvm`, `asdf`, `mise` we want to provide you with an integrated toolset that lets you take advantage of Nix
 without mandating you to learn the nix-language. By editing plain-text files and reusing your existing `.ruby-version`, `.node-version`, etc files, you can cover most of your needs.
+
+::: info ⚡ Fast Track ⚡ 🏃 - The `use_nix_tools.bash` endpoint.
+
+If you already have Nix and direnv installed, you can quickly get an environment ready in no time.
+Note that you don't even need `nix-versions` installed locally for this to work.
+Because the endpoint already resolves the nix-installales for you.
+(read bellow if you want to know more on how it works).
+
+We recommend you to look at the downloaded script beforehand.
+You will notice a `use_nix_installables` function, that you can use independently of `nix-versions`.
+
+```bash
+# Place this on your .envrc
+source_url "https://nix-versions.alwaysdata.net/use_nix_tools.bash/go/ruby" HASH
+```
+
+Where `HASH` can be obtained with:
+
+```bash
+direnv fetchurl "https://nix-versions.alwaysdata.net/use_nix_tools.bash/go/ruby"
+```
+
+You can obtian package updates by doing `direnv reload`.
+:::
 
 ## How it works
 
@@ -48,7 +72,7 @@ nixpkgs/0d534853a55b5d02a4ababa1d71921ce8f0aee4c#ruby_3_4
 
 #### Reading package specs from a plain-text file
 
-Instead of giving package specs as command line arguments you can use the `--read` (short `-r`) [option](../getting-started/cli-help.html) for reading them from a file. 
+Instead of giving package specs as command line arguments you can use the `--read` (short `-r`) [option](../getting-started/cli-help.html) for reading them from a file.
 
 Name of the file is not special to `nix-versions`, but we use the convention of having a `.nix_tools` file.
 
@@ -100,12 +124,9 @@ All you need now is to create the following file `$HOME/.config/direnv/lib/use_n
 will install a function that all your projects can use to load their respective environment.
 
 ```shell
-# This is $HOME/.config/direnv/lib/use_nix_tools.bash
-function use_nix_tools() {
-  tools_file="${1:-.nix_tools}" # defaults to .nix_tools file unless given explicitly
-  watch_file $tools_file
-  direnv_load nix shell $(nix-versions -ir $tools_file) -c $direnv dump
-}
+mkdir -p ~/.config/direnv/lib
+# You can always inspect the downloaded function before installing it
+curl "https://nix-versions.alwaysdata.net/use_nix_tools.bash" -o ~/.config/direnv/lib/use_nix_tools.bash
 ```
 
 Then, on your project directory, besides your `.nix_tools` file, create an `.envrc` file that will be
@@ -116,14 +137,19 @@ detected by `direnv`.
 use nix_tools
 ```
 
-And you are set, just `direnv allow` and enjoy using your tools.
+::: tip Arguments to the `use_nix_tools` function.
+If given no arguments, a `$PWD/.nix_tools` file will be read. But you can provide any
+other file with the same format as described above or any package-spec as expected by the `nix-versions` cli.
+:::
+
+And you are set!, just `direnv allow` and enjoy using your tools.
 
 
 ## More advanced environments.
 
 The Nix ecosystem has much more advanced development environments that those produced by `nix shell`.
 A couple of them are [devenv](https://devenv.sh/) and [devshell](https://github.com/numtide/devshell),
-that provide more advanced features than simply loading environment variables. 
+that provide more advanced features than simply loading environment variables.
 
 They have different features depending on your needs, but they can do process management, services, deployment of containers, git workflow hooks, and much more. Be sure to read their webpages for more info.
 
