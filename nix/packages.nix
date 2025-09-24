@@ -6,7 +6,7 @@
       nix-versions = pkgs.buildGoModule {
         pname = "nix-versions";
         src = ./../cli;
-        version = "1.0.0";
+        version = "1.0.1";
         vendorHash = builtins.readFile ./../cli/vendor-hash;
         meta = with pkgs.lib; {
           description = "Go CLI for searching nix packages versions using lazamar or nixhub";
@@ -35,7 +35,7 @@
       web = pkgs.buildGoModule {
         pname = "nix-versions-web";
         src = ./../web;
-        version = "1.0.0";
+        version = "1.0.1";
         vendorHash = builtins.readFile ./../web/vendor-hash;
         env.CGO_ENABLED = 0; # static build
         meta = with pkgs.lib; {
