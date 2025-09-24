@@ -1,15 +1,15 @@
 diff --git a/node_modules/sass-embedded/dist/lib/src/compiler-path.js b/node_modules/sass-embedded/dist/lib/src/compiler-path.js
-index ae33aa3..7a49d16 100644
+index 07dbb00..a5096cb 100644
 --- a/node_modules/sass-embedded/dist/lib/src/compiler-path.js
 +++ b/node_modules/sass-embedded/dist/lib/src/compiler-path.js
-@@ -24,6 +24,10 @@ function isLinuxMusl(path) {
- }
+@@ -8,6 +8,10 @@ const p = require("path");
+ const compiler_module_1 = require("./compiler-module");
  /** The full command for the embedded compiler executable. */
  exports.compilerCommand = (() => {
 +    const binPath = process.env.SASS_EMBEDDED_BIN_PATH;
 +    if (binPath) {
 +        return [binPath];
 +    }
-     const platform = process.platform === 'linux' && isLinuxMusl(process.execPath)
-         ? 'linux-musl'
-         : process.platform;
+     try {
+         return [
+             require.resolve(`${compiler_module_1.compilerModule}/dart-sass/src/dart` +
