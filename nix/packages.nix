@@ -10,7 +10,7 @@
         vendorHash = builtins.readFile ./../cli/vendor-hash;
         meta = with pkgs.lib; {
           description = "Go CLI for searching nix packages versions using lazamar or nixhub";
-          homepage = "https://nix-versions.alwaysdata.net";
+          homepage = "https://nix-versions.oeiuwq.com";
           mainProgram = "nix-versions";
         };
       };
@@ -28,7 +28,7 @@
         dontInstall = true;
         meta = with pkgs.lib; {
           description = "Site for docs and flake generation services.";
-          homepage = "https://nix-versions.alwaysdata.net";
+          homepage = "https://nix-versions.oeiuwq.com";
         };
       };
 
@@ -40,7 +40,7 @@
         env.CGO_ENABLED = 0; # static build
         meta = with pkgs.lib; {
           description = "Web UI for docs and flake generation services.";
-          homepage = "https://nix-versions.alwaysdata.net";
+          homepage = "https://nix-versions.oeiuwq.com";
           mainProgram = "web";
         };
       };

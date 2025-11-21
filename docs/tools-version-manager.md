@@ -40,13 +40,13 @@ You will notice a `use_nix_installables` function, that you can use independentl
 
 ```bash
 # Place this on your .envrc
-source_url "https://nix-versions.alwaysdata.net/use_nix_tools.sh/go/ruby" HASH
+source_url "https://nix-versions.oeiuwq.com/use_nix_tools.sh/go/ruby" HASH
 ```
 
 Where `HASH` can be obtained with:
 
 ```bash
-direnv fetchurl "https://nix-versions.alwaysdata.net/use_nix_tools.sh/go/ruby"
+direnv fetchurl "https://nix-versions.oeiuwq.com/use_nix_tools.sh/go/ruby"
 ```
 
 You can obtian package updates by doing `direnv reload`.
@@ -126,7 +126,7 @@ will install a function that all your projects can use to load their respective 
 ```shell
 mkdir -p ~/.config/direnv/lib
 # You can always inspect the downloaded function before installing it
-curl "https://nix-versions.alwaysdata.net/use_nix_tools.sh" -o ~/.config/direnv/lib/use_nix_tools.sh
+curl "https://nix-versions.oeiuwq.com/use_nix_tools.sh" -o ~/.config/direnv/lib/use_nix_tools.sh
 ```
 
 Then, on your project directory, besides your `.nix_tools` file, create an `.envrc` file that will be

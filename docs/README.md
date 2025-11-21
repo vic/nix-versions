@@ -62,7 +62,7 @@ nix run github:vic/nix-versions -- 'emacs@~27 || ~29' --all
 > You can use our `flake.zip` endpoint as an input on your own `flake.nix` or `devenv.yaml`.<br/>
 > There's also `flake.nix` endpoint that outputs a text file.
 ```shell
-nix develop 'https://nix-versions.alwaysdata.net/flake.zip/cowsay@latest/go@1.24.x' --output-lock-file /dev/null
+nix develop 'https://nix-versions.oeiuwq.com/flake.zip/cowsay@latest/go@1.24.x' --output-lock-file /dev/null
 ```
 <details><summary>see command output</summary>
 <pre class="ansi-to-html">
@@ -74,5 +74,5 @@ nix develop 'https://nix-versions.alwaysdata.net/flake.zip/cowsay@latest/go@1.24
 > Our `use_nix_tools.sh` endpoint can get you a `direnv` shell in no time!<br/>
 > You don't even need `nix-versions` installed, just `nix` and `direnv`.
 ```shell
-direnv fetchurl "https://nix-versions.alwaysdata.net/use_nix_tools.sh/ruby/cowsay"
+direnv fetchurl "https://nix-versions.oeiuwq.com/use_nix_tools.sh/ruby/cowsay"
 ```
