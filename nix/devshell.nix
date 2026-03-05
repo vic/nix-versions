@@ -35,35 +35,6 @@
         meta.description = "Go web backend (development version)";
       };
 
-      develop-docs = pkgs.writeShellApplication {
-        name = "docs";
-        runtimeInputs = [
-          pkgs.go
-        ];
-        text = ''
-          (
-            cd "''${PROJECT_ROOT:-"$(git rev-parse --show-toplevel)"}"/docs
-            npm run dev
-          )
-        '';
-        meta.description = "Docs devserver";
-      };
-
-      gen-ansi-html = pkgs.writeShellApplication {
-        name = "gen-ansi-html";
-        runtimeInputs = [
-          go-nix-versions
-          pkgs.nodejs
-          pkgs.findutils
-          pkgs.ansi2html
-        ];
-        text = ''
-          # shellcheck disable=SC2016
-          find . -name '*.ansi.bash' -print0 | xargs -0 -I FILE bash -v -c 'bash FILE 2>&1 | ansi2html -i -a -p > $(echo FILE | sed -e s/.bash/.html/)'
-        '';
-        meta.description = "Generate HTML from ANSI (*.ansi.bash -> *.ansi.html)";
-      };
-
       restart-web = pkgs.writeShellApplication {
         name = "restart-web";
         text = ''
@@ -84,8 +55,6 @@
           commands = [
             { package = go-nix-versions; }
             { package = go-web; }
-            { package = develop-docs; }
-            { package = gen-ansi-html; }
             { package = restart-web; }
           ];
 
@@ -102,6 +71,7 @@
             pkgs.gopls
             pkgs.go
             pkgs.nodejs
+            pkgs.pnpm
           ];
 
           packagesFrom = [

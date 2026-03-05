@@ -10,5 +10,6 @@
     programs.mdformat.excludes = [ "docs/**" ];
     programs.yamlfmt.enable = true;
     programs.gofmt.enable = true;
+    settings.global.excludes = [ "docs/*" ];
   };
 }

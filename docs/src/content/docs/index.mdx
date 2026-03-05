@@ -1,0 +1,89 @@
+---
+title: nix-versions
+template: splash
+hero:
+  tagline: Find and pin your tools to predictable package versions
+  image:
+    html: |
+      <span style="font-size: 10rem">❄️</span>
+  actions:
+    - text: Get Started
+      link: /getting-started/installing/
+      icon: right-arrow
+    - text: Visit at GitHub
+      link: https://github.com/vic/nix-versions
+      icon: external
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+<CardGrid>
+<Card>
+##### Works for everyone, at any level.
+
+As a friendly CLI to explore available versions.
+
+As a tools version manager and development shell.
+
+As a flake generator for pinned-version packages.
+
+</Card>
+<Card>
+##### Combine latest and dependable, stable versions.
+
+Keep your compilers and tooling at *known, stable releases* that work with your current code.
+
+And use the most recent version for other nixpkgs.
+</Card>
+<Card>
+##### Plays well with existing tools.
+
+Friendly with `nix shell`, `direnv` and advanced nix environments like `devenv` and `devshell`.
+
+Usable as an `input` for any Flake and with `fetchurl` for non-flakes.
+
+</Card>
+<Card>
+##### Powered by nix but requires no-wizardry™
+
+All the advantages of Nix without much effort.
+Reproducibility, security checksums, sandboxed builds, caching, remote building.
+
+Re-use your existing `.ruby-version`, `.node-version` project files.
+
+</Card>
+</CardGrid>
+
+
+
+---
+
+# Try it now.
+
+### As a command line utility
+
+```shell
+nix run github:vic/nix-versions -- 'emacs@~27 || ~29' --all
+```
+
+### As a flake.nix generator
+
+You can use our `flake.zip` endpoint as an input on your own `flake.nix` or `devenv.yaml`.
+There's also `flake.nix` endpoint that outputs a text file.
+
+```shell
+nix develop 'https://nix-versions.oeiuwq.com/flake.zip/cowsay@latest/go@1.24.x' --output-lock-file /dev/null
+```
+
+### As a direnv shell generator
+
+Our `use_nix_tools.sh` endpoint can get you a `direnv` shell in no time!
+You don't even need `nix-versions` installed, just `nix` and `direnv`.
+
+```shell
+direnv fetchurl "https://nix-versions.oeiuwq.com/use_nix_tools.sh/ruby/cowsay"
+```
+
+---
+
+Kindly hosted by [AlwaysData](https://alwaysdata.com) | Made with ❤️ by [@oeiuwq](https://x.com/oeiuwq) and [contributors](https://github.com/vic/nix-versions/graphs/contributors).

@@ -11,11 +11,11 @@ mkdir -p "$HOME"/.ssh
 echo "StrictHostKeyChecking no" >> "$HOME"/.ssh/config
 
 # Until we fix the nix builder, since esbuild hangs on the sandbox.
-DOCS="$PWD/docs/.vuepress/dist"
+DOCS="$PWD/docs/dist"
 rm -rf "$DOCS"
 cd docs
-npm ci
-npm run build
+pnpm install
+pnpm run build
 
 ssh-add <(echo "$WEB_ADMIN_DEPLOY_KEY") 2>&1>/dev/null
 rsync -avPz -e ssh --delete "$DOCS"/* "$WEB_ADMIN_HOST":"~/www"

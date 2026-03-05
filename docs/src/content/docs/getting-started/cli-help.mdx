@@ -1,0 +1,27 @@
+---
+title: CLI Help
+sidebar:
+  order: 4
+---
+
+# CLI Options
+
+Run `nix-versions --help` to see all available options:
+
+```shell
+nix run github:vic/nix-versions -- --help
+```
+
+Some of the most common options:
+
+- `-i, --installable` - Output Nix installable paths for use with `nix shell`
+- `-a, --all` - Show all versions with visual formatting
+- `-1, --one` - Show only the latest matching version
+- `-r, --read FILE` - Read package specs from a file
+- `--color` - Enable/disable colored output
+- `--nixhub` - Use NixHub backend
+- `--lazamar CHANNEL` - Use Lazamar with specific channel
+- `--history` - Use history.nix-packages.com backend
+- `--system` - Use local system nixpkgs
+
+See the help output for the complete list of options.
