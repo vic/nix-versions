@@ -62,7 +62,6 @@
       packages = {
         default = nix-versions;
         nix-versions-web = web;
-        nix-versions-docs = docs;
 
         inherit
           nix-versions
