@@ -1,1 +1,0 @@
-nix-versions system:emacs

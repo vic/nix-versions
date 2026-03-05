@@ -1,1 +1,0 @@
-nix-versions  'bin/cargo*' --one
