@@ -15,23 +15,6 @@
         };
       };
 
-      # Fix me, esbuild hangs, dunno why.
-      docs = pkgs.buildNpmPackage {
-        name = "nix-versions-site";
-        src = ./../docs;
-        npmDepsHash = builtins.readFile ./../docs/vendor-hash;
-        buildPhase = ''
-          export SASS_EMBEDDED_BIN_PATH="${pkgs.dart-sass}/bin/sass"
-          mkdir -p $HOME/{temp,cache}
-          npm run build -- --debug --clean-cache --clean-temp --temp $HOME/temp --cache $HOME/cache --dest $out
-        '';
-        dontInstall = true;
-        meta = with pkgs.lib; {
-          description = "Site for docs and flake generation services.";
-          homepage = "https://nix-versions.oeiuwq.com";
-        };
-      };
-
       web = pkgs.buildGoModule {
         pname = "nix-versions-web";
         src = ./../web;
@@ -49,6 +32,7 @@
         name = "deploy-docs";
         meta.description = "Deploy docs";
         runtimeInputs = with pkgs; [
+          pnpm
           nodejs
           rsync
           openssh
